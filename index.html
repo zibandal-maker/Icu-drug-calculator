@@ -1021,7 +1021,7 @@ if('serviceWorker' in navigator){
     <div class="logo">💊</div>
     <div class="hdr-title">ICU 약물 계산기</div>
   </div>
-  <a class="hdr-feedback" href="https://formspree.io/f/mkoadkje" target="_blank" rel="noopener">💬 피드백</a>
+  <button type="button" class="hdr-feedback" onclick="openFeedback()">💬 피드백</button>
 </div>
 
 <div class="sticky-bar" id="sticky-bar">
@@ -4876,6 +4876,57 @@ function openAddModal(){
   setTimeout(function(){var el=document.getElementById('m-name');if(el)el.focus();},80);
 }
 function closeModal(){var m=document.getElementById('pt-modal');if(m)document.body.removeChild(m);}
+
+/* ===== 피드백 (앱 내 모달 + Formspree AJAX 전송) ===== */
+var FEEDBACK_ENDPOINT='https://formspree.io/f/mkoadkje';
+function openFeedback(){
+  var ov=document.createElement('div');
+  ov.id='fb-modal';
+  ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;';
+  ov.onclick=function(e){ if(e.target===ov) closeFeedback(); };
+  ov.innerHTML='<div style="background:var(--surface);border-radius:14px;padding:22px;width:100%;max-width:340px;box-shadow:0 8px 32px rgba(0,0,0,.2);box-sizing:border-box;">'
+    +'<div style="font-size:16px;font-weight:700;margin-bottom:4px;color:var(--text);">💬 피드백 보내기</div>'
+    +'<div style="font-size:11.5px;color:var(--muted);margin-bottom:16px;line-height:1.5;">버그·개선 의견·추가 약물 요청 등 무엇이든 환영합니다.</div>'
+    +'<div style="margin-bottom:10px;"><div style="font-size:11px;font-weight:700;color:var(--muted);margin-bottom:4px;">내용</div>'
+    +'<textarea id="fb-msg" rows="4" placeholder="예: 노르에피네프린에 16@ 옵션도 추가해주세요" style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;background:var(--surface2);color:var(--text);box-sizing:border-box;outline:none;resize:vertical;font-family:inherit;"></textarea></div>'
+    +'<div style="margin-bottom:16px;"><div style="font-size:11px;font-weight:700;color:var(--muted);margin-bottom:4px;">회신용 이메일 <span style="font-weight:400;">(선택)</span></div>'
+    +'<input id="fb-email" type="email" inputmode="email" placeholder="reply@example.com" style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;background:var(--surface2);color:var(--text);box-sizing:border-box;outline:none;"></div>'
+    +'<div id="fb-status" style="font-size:12px;margin-bottom:10px;min-height:16px;"></div>'
+    +'<div style="display:flex;gap:8px;">'
+    +'<button type="button" onclick="closeFeedback()" style="flex:1;padding:10px;border-radius:8px;background:var(--surface2);border:1px solid var(--border);font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;">취소</button>'
+    +'<button type="button" id="fb-send" onclick="sendFeedback()" style="flex:1.5;padding:10px;border-radius:8px;background:var(--accent);border:none;font-size:13px;font-weight:700;color:#fff;cursor:pointer;">보내기</button>'
+    +'</div></div>';
+  document.body.appendChild(ov);
+  setTimeout(function(){var el=document.getElementById('fb-msg');if(el)el.focus();},80);
+}
+function closeFeedback(){var m=document.getElementById('fb-modal');if(m)document.body.removeChild(m);}
+function sendFeedback(){
+  var msgEl=document.getElementById('fb-msg');
+  var emailEl=document.getElementById('fb-email');
+  var statusEl=document.getElementById('fb-status');
+  var btn=document.getElementById('fb-send');
+  var msg=(msgEl&&msgEl.value||'').trim();
+  if(!msg){ if(statusEl){statusEl.style.color='var(--red,#dc2626)';statusEl.textContent='내용을 입력해주세요.';} return; }
+  if(btn){ btn.disabled=true; btn.textContent='전송 중…'; btn.style.opacity='.6'; }
+  if(statusEl){ statusEl.style.color='var(--muted)'; statusEl.textContent=''; }
+  var payload={ message:msg, email:(emailEl&&emailEl.value||'')||'(미입력)', _source:'ICU계산기 앱' };
+  fetch(FEEDBACK_ENDPOINT,{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Accept':'application/json'},
+    body:JSON.stringify(payload)
+  }).then(function(res){
+    if(res.ok){
+      if(statusEl){ statusEl.style.color='var(--green,#16a34a)'; statusEl.textContent='✓ 전송되었습니다. 감사합니다!'; }
+      if(msgEl)msgEl.value=''; if(emailEl)emailEl.value='';
+      setTimeout(closeFeedback,1400);
+    } else {
+      throw new Error('server');
+    }
+  }).catch(function(){
+    if(statusEl){ statusEl.style.color='var(--red,#dc2626)'; statusEl.innerHTML='전송 실패. 네트워크를 확인하거나 잠시 후 다시 시도해주세요.'; }
+    if(btn){ btn.disabled=false; btn.textContent='다시 보내기'; btn.style.opacity='1'; }
+  });
+}
 function confirmAdd(){
   var n=((document.getElementById('m-name')||{}).value||'').trim()||('환자'+(SESSIONS.length+1));
   var w=parseFloat(((document.getElementById('m-wt')||{}).value)||60)||60;
