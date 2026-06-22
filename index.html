@@ -997,6 +997,21 @@ input[type=range]::-moz-range-thumb{
 .nut-warn{font-size:10.5px;color:#92400e;background:#fff4e5;border-radius:7px;padding:7px 10px;margin-top:7px;line-height:1.45;}
 @media (max-width:430px){.nut-grid{grid-template-columns:1fr;}}
 </style>
+<!-- ===== PWA / TWA 연결 (v3.11) ===== -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#3a5fc8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="ICU계산기">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load',function(){
+    navigator.serviceWorker.register('/sw.js').catch(function(){});
+  });
+}
+</script>
 </head>
 <body>
 <div class="app">

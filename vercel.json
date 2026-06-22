@@ -1,23 +1,23 @@
 {
-  "rewrites": [],
   "headers": [
     {
-      "source": "/icu_drug_calculator.html",
+      "source": "/.well-known/assetlinks.json",
       "headers": [
-        { "key": "X-Robots-Tag", "value": "index, follow" },
-        { "key": "Cache-Control", "value": "public, max-age=86400" }
+        { "key": "Content-Type", "value": "application/json" },
+        { "key": "Access-Control-Allow-Origin", "value": "*" }
       ]
     },
     {
-      "source": "/robots.txt",
+      "source": "/sw.js",
       "headers": [
-        { "key": "Content-Type", "value": "text/plain" }
+        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" },
+        { "key": "Service-Worker-Allowed", "value": "/" }
       ]
     },
     {
-      "source": "/sitemap.xml",
+      "source": "/manifest.json",
       "headers": [
-        { "key": "Content-Type", "value": "application/xml" }
+        { "key": "Content-Type", "value": "application/manifest+json" }
       ]
     }
   ]
