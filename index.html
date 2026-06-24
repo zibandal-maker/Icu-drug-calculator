@@ -756,6 +756,17 @@ input[type=range]::-moz-range-thumb{
 .elyte-ref{font-size:10px;color:var(--muted2);line-height:1.6;border-top:1px solid var(--border);padding-top:9px;}
 @media (max-width:480px){ .elyte-inputs{grid-template-columns:1fr;} }
 @media (max-width:560px){ .ibw-layout{grid-template-columns:1fr !important;} }
+/* 모바일 카드 간격 압축 — Vent/CRRT 탭 세로 공간 절약 */
+@media (max-width:480px){
+  /* 직계 카드 블록 하단 여백 축소 */
+  #tab-ibw > div, #tab-crrt > div{ margin-bottom:9px !important; }
+  /* 큰 패딩(16px 20px) 카드 → 모바일 축소 */
+  #tab-ibw > div[style*="padding:16px 20px"],
+  #tab-crrt > div[style*="padding:16px 20px"],
+  #tab-ibw > div[style*="padding:14px 16px"]{ padding:11px 13px !important; }
+  /* 공용 입력 바 패딩 축소 */
+  #tab-ibw > div[style*="padding:14px 16px"]:first-child{ padding:11px 13px !important; }
+}
 /* Vent 탭 표: 모바일에서 셀 여백·폰트 축소로 화면 폭 안에 수용 */
 .vent-tbl-wrap table{font-size:12px;}
 @media (max-width:430px){
@@ -768,10 +779,12 @@ input[type=range]::-moz-range-thumb{
   .vent-tbl-wrap th,.vent-tbl-wrap td{padding:5px 4px !important;}
 }
 /* 320px급 극소폭: 상단 환자·약물 바 버튼 축소 + 줄바꿈 허용 */
+@media (max-width:420px){
+  .pt-compact{flex-wrap:wrap;gap:6px;}
+}
 @media (max-width:340px){
   .pt-active-btn,.pt-edit-btn{padding:7px 8px;font-size:10.5px;gap:3px;}
   .app{padding-left:10px;padding-right:10px;}
-  .pt-compact{flex-wrap:wrap;gap:6px;}
 }
 
 /* ── 범용
@@ -1017,6 +1030,40 @@ input[type=range]::-moz-range-thumb{
 
 /* CRRT 모듈 CSS */
 :root{--teal-lt:#ccfbf1;}
+/* ===== 다크 모드 — 야간 ICU 대응. 상태색(녹/주황/빨강)은 어두운 배경 가독성 위해 밝게 조정 ===== */
+[data-theme="dark"]{
+  --bg:#0f141c;--surface:#1a212e;--surface2:#222b3a;
+  --border:#2e3848;--border2:#3d4a5e;
+  --accent:#6b93f0;--accent-lt:#1e2942;--accent-bg:#243352;
+  --green:#4ade80;--green-lt:#15291c;--green-bg:#1c3a28;
+  --orange:#fb923c;--orange-lt:#2a1d11;--orange-bg:#3d2a18;
+  --red:#f87171;--red-lt:#2c1517;--red-bg:#3f1d20;
+  --purple:#a78bfa;--purple-lt:#1f1a33;--purple-bg:#2c2547;
+  --teal:#2dd4bf;--teal-lt:#10302c;--teal-bg:#14423c;
+  --yellow:#facc15;--yellow-lt:#2a2410;
+  --cyan:#22d3ee;--cyan-lt:#0e2a30;--cyan-bg:#15414a;
+  --emerald:#34d399;--emerald-lt:#0f2a20;--emerald-bg:#15412f;
+  --indigo:#818cf8;--indigo-lt:#1c2142;--indigo-bg:#272d52;
+  --text:#e6ebf2;--text2:#c0c8d4;--muted:#8b95a5;--muted2:#6b7585;
+  --ink:#e6ebf2;
+  --sh:0 1px 3px rgba(0,0,0,.3),0 1px 2px rgba(0,0,0,.2);
+  --sh2:0 4px 16px rgba(0,0,0,.4);
+}
+/* 다크모드에서 인라인 하드코딩된 밝은 그라데이션 배경 톤다운 */
+[data-theme="dark"] [style*="linear-gradient(135deg,#eff6ff"],
+[data-theme="dark"] [style*="linear-gradient(135deg,#eff6ff,#f0fdfa)"],
+[data-theme="dark"] [style*="linear-gradient(135deg,#eff6ff,#f0fdf4)"]{
+  background:var(--surface2) !important;
+}
+[data-theme="dark"] [style*="background:#fffbeb"],
+[data-theme="dark"] [style*="background:#fef2f2"]{ background:var(--surface2) !important; }
+[data-theme="dark"] [style*="border:1px solid #fde68a"],
+[data-theme="dark"] [style*="border:1px solid #bfdbfe"]{ border-color:var(--border2) !important; }
+/* 테마 토글 버튼 */
+.theme-toggle{background:none;border:1px solid var(--border2);border-radius:8px;width:34px;height:34px;font-size:16px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;color:var(--text2);flex-shrink:0;transition:background .12s;}
+.theme-toggle:hover{background:var(--surface2);}
+/* 다크모드 beta 배너 가독성 */
+[data-theme="dark"] .beta-banner{ background:var(--orange-lt) !important; border-color:var(--orange-bg) !important; color:#fbbf77 !important; }
 .crrt-lbl{display:flex;flex-direction:column;font-size:11px;font-weight:700;color:var(--muted);gap:3px;}
 .crrt-lbl input[type="number"]{width:100%;box-sizing:border-box;min-width:0;font-size:14px;padding:7px 9px;border:1px solid var(--border2);border-radius:7px;font-family:var(--mono);background:var(--surface);}
 .crrt-acc{border:1px solid var(--border);border-radius:10px;margin-bottom:10px;background:var(--surface);overflow:hidden;}
@@ -1127,6 +1174,7 @@ if('serviceWorker' in navigator){
     </div>
     <button class="pt-edit-btn" type="button" onclick="togPtPanel()" id="pt-edit-btn">빠른설정 ▾</button>
     <button class="pt-active-btn" type="button" onclick="switchTab('active',this)" id="pt-active-btn">💉 현재약물<span class="pt-active-cnt" id="pt-active-cnt"></span></button>
+    <button class="theme-toggle" type="button" onclick="toggleTheme()" id="theme-toggle" aria-label="다크모드 전환" title="다크모드 전환">🌙</button>
   </div>
   <div class="pt-quick-wrap" id="pt-quick-wrap" style="display:none;">
     <span class="pt-quick-lbl">빠른 체중</span>
@@ -1469,20 +1517,21 @@ if('serviceWorker' in navigator){
     <span>Vent 모듈(ABGA 연동·조정 제안)은 검증을 진행 중입니다. 제안 값은 참고용으로만 보시고, setting 변경 전 반드시 재확인해 주세요.</span>
   </div>
 
+  <!-- ══ 결과 요약 카드 (입력 위 — 한눈에) ══ -->
+  <div id="vent-summary"></div>
+
   <!-- ===== 공용 Ventilator 입력 바 (Single Source of Truth) ===== -->
   <div style="background:linear-gradient(135deg,#eff6ff,#f0fdfa);border:1.5px solid var(--cyan,#06b6d4);border-radius:var(--rl);padding:14px 16px;margin-bottom:16px;box-shadow:var(--sh);">
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
       <span style="font-size:13px;font-weight:800;color:var(--cyan,#06b6d4);">🎛️ 현재 Ventilator Setting</span>
-      <span style="font-size:10.5px;color:var(--muted);">한 번 입력 → 제안·PEEP표·Driving·RSBI 전부 실시간 연동</span>
     </div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(92px,1fr));gap:8px 10px;">
-      <label class="vent-lbl">FiO₂ (소수)<input type="number" id="vs-fio2" value="0.4" min="0.21" max="1" step="0.05" inputmode="decimal" oninput="recalcVentAll()"></label>
-      <label class="vent-lbl">PEEP (cmH₂O)<input type="number" id="vs-peep" value="5" min="0" step="1" inputmode="decimal" oninput="recalcVentAll()"></label>
-      <label class="vent-lbl">Plateau (cmH₂O)<input type="number" id="vs-plateau" value="" min="0" step="1" inputmode="decimal" placeholder="예:26" oninput="recalcVentAll()"></label>
-      <label class="vent-lbl">TV (mL)<input type="number" id="vs-tv" value="450" min="0" step="10" inputmode="decimal" oninput="recalcVentAll()"></label>
-      <label class="vent-lbl">RR (/min)<input type="number" id="vs-rr" value="14" min="0" step="1" inputmode="decimal" oninput="recalcVentAll()"></label>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(84px,1fr));gap:8px 8px;">
+      <label class="vent-lbl">FiO₂<input type="number" id="vs-fio2" value="0.4" min="0.21" max="1" step="0.05" inputmode="decimal" placeholder="소수" oninput="recalcVentAll()"></label>
+      <label class="vent-lbl">PEEP<input type="number" id="vs-peep" value="5" min="0" step="1" inputmode="decimal" placeholder="cmH₂O" oninput="recalcVentAll()"></label>
+      <label class="vent-lbl">Plateau<input type="number" id="vs-plateau" value="" min="0" step="1" inputmode="decimal" placeholder="cmH₂O" oninput="recalcVentAll()"></label>
+      <label class="vent-lbl">TV<input type="number" id="vs-tv" value="450" min="0" step="10" inputmode="decimal" placeholder="mL" oninput="recalcVentAll()"></label>
+      <label class="vent-lbl">RR<input type="number" id="vs-rr" value="14" min="0" step="1" inputmode="decimal" placeholder="/min" oninput="recalcVentAll()"></label>
     </div>
-    <div style="font-size:10px;color:var(--muted2);margin-top:6px;">※ IBW(신장·성별)는 아래 <b>이상체중 계산</b> 패널과 연동됩니다.</div>
   </div>
 
   <!-- ===== ABGA 분석기 + Vent 제안 (elyte→vent 이동) ===== -->
@@ -1739,22 +1788,22 @@ if('serviceWorker' in navigator){
 
         <div style="font-size:13px;font-weight:800;color:var(--cyan);margin:4px 0 6px;">RSBI (Rapid Shallow Breathing Index)</div>
         <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px 12px;margin-bottom:6px;">
-          <label class="vent-lbl">호흡수 RR (/min)<input type="number" id="vent-rr" value="25" min="0" step="1" inputmode="decimal" oninput="calcVentPredict()"></label>
-          <label class="vent-lbl">일회호흡량 TV (L)<input type="number" id="vent-tvl" value="0.4" min="0" step="0.05" inputmode="decimal" oninput="calcVentPredict()"></label>
+          <label class="vent-lbl">RR<input type="number" id="vent-rr" value="25" min="0" step="1" inputmode="decimal" oninput="calcVentPredict()" placeholder="/min"></label>
+          <label class="vent-lbl">TV<input type="number" id="vent-tvl" value="0.4" min="0" step="0.05" inputmode="decimal" oninput="calcVentPredict()" placeholder="L"></label>
         </div>
         <div id="vent-rsbi-out"></div>
 
         <div style="font-size:13px;font-weight:800;color:var(--cyan);margin:14px 0 6px;">Cuff Leak (후두부종 예측)</div>
         <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px 12px;margin-bottom:6px;">
-          <label class="vent-lbl">흡기 TV (mL)<input type="number" id="vent-insp" value="500" min="0" step="10" inputmode="decimal" oninput="calcVentPredict()"></label>
-          <label class="vent-lbl">호기 TV deflate (mL)<input type="number" id="vent-exp" value="420" min="0" step="10" inputmode="decimal" oninput="calcVentPredict()"></label>
+          <label class="vent-lbl">흡기 TV<input type="number" id="vent-insp" value="500" min="0" step="10" inputmode="decimal" oninput="calcVentPredict()" placeholder="mL"></label>
+          <label class="vent-lbl">호기 TV<input type="number" id="vent-exp" value="420" min="0" step="10" inputmode="decimal" oninput="calcVentPredict()" placeholder="mL deflate"></label>
         </div>
         <div id="vent-cuff-out"></div>
 
         <div style="font-size:13px;font-weight:800;color:var(--cyan);margin:14px 0 6px;">NIF / P/F (보조 입력)</div>
         <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px 12px;margin-bottom:6px;">
-          <label class="vent-lbl">NIF / MIP (cmH₂O, 음수)<input type="number" id="vent-nif" value="-28" max="0" step="1" inputmode="decimal" oninput="calcVentPredict()"></label>
-          <label class="vent-lbl">PaO₂/FiO₂ (mmHg)<input type="number" id="vent-pf" value="200" min="0" step="10" inputmode="decimal" oninput="calcVentPredict()"></label>
+          <label class="vent-lbl">NIF/MIP<input type="number" id="vent-nif" value="-28" max="0" step="1" inputmode="decimal" oninput="calcVentPredict()" placeholder="cmH₂O 음수"></label>
+          <label class="vent-lbl">PaO₂/FiO₂<input type="number" id="vent-pf" value="200" min="0" step="10" inputmode="decimal" oninput="calcVentPredict()" placeholder="mmHg"></label>
         </div>
 
         <div id="vent-extub-out" style="margin-top:10px;"></div>
@@ -1794,8 +1843,8 @@ if('serviceWorker' in navigator){
 
         <div style="font-size:13px;font-weight:800;color:var(--cyan);margin:4px 0 6px;">DTF (Thickening Fraction)</div>
         <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px 12px;margin-bottom:6px;">
-          <label class="vent-lbl">Tdi 흡기말 (cm)<input type="number" id="v2-tdi-insp" value="0.28" min="0" step="0.01" inputmode="decimal" oninput="calcVentDUS()"></label>
-          <label class="vent-lbl">Tdi 호기말 (cm)<input type="number" id="v2-tdi-exp" value="0.20" min="0" step="0.01" inputmode="decimal" oninput="calcVentDUS()"></label>
+          <label class="vent-lbl">Tdi 흡기말<input type="number" id="v2-tdi-insp" value="0.28" min="0" step="0.01" inputmode="decimal" oninput="calcVentDUS()" placeholder="cm"></label>
+          <label class="vent-lbl">Tdi 호기말<input type="number" id="v2-tdi-exp" value="0.20" min="0" step="0.01" inputmode="decimal" oninput="calcVentDUS()" placeholder="cm"></label>
         </div>
         <div id="v2-dtf-out"></div>
 
@@ -1817,9 +1866,9 @@ if('serviceWorker' in navigator){
 
         <div style="font-size:13px;font-weight:800;color:var(--cyan);margin:14px 0 6px;">ROX Index (HFNC 실패 예측)</div>
         <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);gap:8px 12px;margin-bottom:6px;">
-          <label class="vent-lbl">SpO₂ (%)<input type="number" id="v2-spo2" value="95" min="0" max="100" step="1" inputmode="decimal" oninput="calcVentROX()"></label>
-          <label class="vent-lbl">FiO₂ (소수)<input type="number" id="v2-fio2" value="0.4" min="0.21" max="1" step="0.05" inputmode="decimal" oninput="calcVentROX()"></label>
-          <label class="vent-lbl">RR (/min)<input type="number" id="v2-rox-rr" value="24" min="0" step="1" inputmode="decimal" oninput="calcVentROX()"></label>
+          <label class="vent-lbl">SpO₂<input type="number" id="v2-spo2" value="95" min="0" max="100" step="1" inputmode="decimal" oninput="calcVentROX()" placeholder="%"></label>
+          <label class="vent-lbl">FiO₂<input type="number" id="v2-fio2" value="0.4" min="0.21" max="1" step="0.05" inputmode="decimal" oninput="calcVentROX()" placeholder="소수"></label>
+          <label class="vent-lbl">RR<input type="number" id="v2-rox-rr" value="24" min="0" step="1" inputmode="decimal" oninput="calcVentROX()" placeholder="/min"></label>
         </div>
         <div id="v2-rox-out"></div>
 
@@ -1837,8 +1886,8 @@ if('serviceWorker' in navigator){
 
         <div style="font-size:13px;font-weight:800;color:var(--cyan);margin:14px 0 6px;">Cuff Leak Test (이중 cutoff)</div>
         <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px 12px;margin-bottom:6px;">
-          <label class="vent-lbl">흡기 TV (mL)<input type="number" id="v2-clt-insp" value="500" min="0" step="10" inputmode="decimal" oninput="calcVentCLT()"></label>
-          <label class="vent-lbl">호기 TV deflate (mL)<input type="number" id="v2-clt-exp" value="470" min="0" step="10" inputmode="decimal" oninput="calcVentCLT()"></label>
+          <label class="vent-lbl">흡기 TV<input type="number" id="v2-clt-insp" value="500" min="0" step="10" inputmode="decimal" oninput="calcVentCLT()" placeholder="mL"></label>
+          <label class="vent-lbl">호기 TV<input type="number" id="v2-clt-exp" value="470" min="0" step="10" inputmode="decimal" oninput="calcVentCLT()" placeholder="mL deflate"></label>
         </div>
         <div id="v2-clt-out"></div>
 
@@ -1863,6 +1912,9 @@ if('serviceWorker' in navigator){
     💧 <b>CRRT 조정 참고</b> · 아래 수치는 함께 보는 참고값이며, 처방은 의료진이 정합니다.<br>
     <span style="color:var(--cyan);font-weight:700;">[가이드]</span> KSN CKRT 2025·KDIGO &nbsp; <span style="color:var(--orange);font-weight:700;">[국내 일반]</span> 국내 ICU 프로토콜 — 상충 시 둘 다 표시.
   </div>
+
+  <!-- ══ 결과 요약 카드 (입력 위 — 한눈에) ══ -->
+  <div id="crrt-summary"></div>
 
   <!-- ══ §1 처방 핵심: 용량 + FF + delivered (펼침) ══ -->
   <div class="crrt-sec" style="background:var(--surface);border:1px solid var(--border2);border-radius:12px;padding:16px;margin-bottom:14px;">
@@ -4040,6 +4092,27 @@ var DRUGS = [
 
 function bwt(){return parseFloat(document.getElementById('bwt').value)||60;}
 function setBwt(v){document.getElementById('bwt').value=v;updateAll();}
+function toggleTheme(){
+  var cur=document.documentElement.getAttribute('data-theme')==='dark'?'dark':'light';
+  var next=cur==='dark'?'light':'dark';
+  applyTheme(next);
+  try{ localStorage.setItem('icucalc-theme', next); }catch(e){}
+}
+function applyTheme(theme){
+  if(theme==='dark'){ document.documentElement.setAttribute('data-theme','dark'); }
+  else { document.documentElement.removeAttribute('data-theme'); }
+  var btn=document.getElementById('theme-toggle');
+  if(btn) btn.textContent = (theme==='dark') ? '☀️' : '🌙';
+}
+(function initTheme(){
+  var saved='light';
+  try{ saved=localStorage.getItem('icucalc-theme')||'light'; }catch(e){}
+  if(saved==='dark') document.documentElement.setAttribute('data-theme','dark');
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',function(){ applyTheme(saved); });
+  } else { applyTheme(saved); }
+})();
+
 function stepBwt(delta){
   var el=document.getElementById('bwt');
   var v=(parseFloat(el.value)||60)+delta;
@@ -6975,11 +7048,55 @@ function renderPeepLadder(){
 }
 
 // 공용 Ventilator Setting 변경 시 의존 모듈 전부 재계산 (Single Source of Truth)
+function renderVentSummary(){
+  var out=document.getElementById('vent-summary'); if(!out) return;
+  var tv=ventNum('vs-tv'), peep=ventNum('vs-peep'), plat=ventNum('vs-plateau');
+  var ht=ventNum('ibw-height'), sex=(typeof ibwSex!=='undefined'?ibwSex:'male');
+  var ibw=ht!=null?calcIBW(ht,sex):0;
+  var S=(typeof VENT_SUGGEST!=='undefined')?VENT_SUGGEST:null;
+  var cards='';
+
+  // TV mL/kg
+  if(tv!=null && ibw>0){
+    var perKg=Math.round(tv/ibw*10)/10;
+    var c=(perKg>8)?'var(--red)':(perKg<5.5?'var(--orange)':'var(--green)');
+    var lbl=(perKg>8)?'상한 초과':(perKg<5.5?'낮음':'적정');
+    cards+='<div style="flex:1;min-width:84px;background:var(--surface2);border-radius:9px;padding:9px 8px;text-align:center;">'
+         +'<div style="font-size:9.5px;color:var(--muted);font-weight:700;text-transform:uppercase;">TV/kg</div>'
+         +'<div style="font-size:20px;font-weight:800;color:'+c+';font-family:var(--mono);line-height:1.1;">'+perKg+'</div>'
+         +'<div style="font-size:9px;color:'+c+';font-weight:700;">'+lbl+'</div></div>';
+  }
+  // Driving pressure
+  if(plat!=null && peep!=null){
+    var dp=plat-peep;
+    var dpMin=(S&&S.protect)?S.protect.drivingMin:5, dpMax=(S&&S.protect)?S.protect.drivingMax:15;
+    var dc=(dp<=0||dp<dpMin||dp>dpMax)?'var(--red)':'var(--green)';
+    var dl=(dp<=0)?'입력확인':(dp<dpMin?'비정상':(dp>dpMax?'높음':'적정'));
+    cards+='<div style="flex:1;min-width:84px;background:var(--surface2);border-radius:9px;padding:9px 8px;text-align:center;">'
+         +'<div style="font-size:9.5px;color:var(--muted);font-weight:700;text-transform:uppercase;">ΔP</div>'
+         +'<div style="font-size:20px;font-weight:800;color:'+dc+';font-family:var(--mono);line-height:1.1;">'+dp+'</div>'
+         +'<div style="font-size:9px;color:'+dc+';font-weight:700;">'+dl+'</div></div>';
+  }
+  // 제안 경고 수 (🔴 high 개수)
+  var vsOut=document.getElementById('vs-out');
+  if(vsOut){
+    var highCount=(vsOut.innerHTML.match(/🔴/g)||[]).length;
+    var wc=highCount>0?'var(--red)':'var(--green)';
+    cards+='<div style="flex:1;min-width:84px;background:var(--surface2);border-radius:9px;padding:9px 8px;text-align:center;">'
+         +'<div style="font-size:9.5px;color:var(--muted);font-weight:700;text-transform:uppercase;">주의 항목</div>'
+         +'<div style="font-size:20px;font-weight:800;color:'+wc+';font-family:var(--mono);line-height:1.1;">'+highCount+'</div>'
+         +'<div style="font-size:9px;color:'+wc+';font-weight:700;">'+(highCount>0?'확인 필요':'양호')+'</div></div>';
+  }
+
+  out.innerHTML = cards ? '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;">'+cards+'</div>' : '';
+}
+
 function recalcVentAll(){
   try{ renderPeepLadder(); }catch(e){}   // FiO₂ → ladder
   try{ calcVentDP(); }catch(e){}         // Plateau·PEEP → driving pressure
   try{ if(typeof cIBW==='function') cIBW(); }catch(e){}  // TV → 현재 mL/kg 평가 (+ 내부에서 제안 갱신)
   try{ calcVentSuggest(); }catch(e){}    // ABGA + setting → 제안 (cIBW가 이미 불러도 멱등)
+  try{ if(typeof renderVentSummary==='function') renderVentSummary(); }catch(e){}  // 요약 카드 (제안 결과 읽음)
   // RSBI(calcVentPredict)는 weaning 전용 독립 입력이라 의도적으로 제외
 }
 function initVent(){ renderVentSbtList(); calcVentSbt(); calcVentPredict(); recalcVentAll(); }
@@ -7007,11 +7124,12 @@ var CRRT = {
   },
   electrolyteBags: {
     products: [
-      { id:'bag:hemosol_b0',  name:'Hemosol B0 / Prismasol B0', K:0, P:0,   HCO3:32, Ca:1.75, note:'무K·무P. 고K 교정 기본액.' },
-      { id:'bag:prismasol_2', name:'Prismasol 2',               K:2, P:0,   HCO3:32, Ca:1.75, note:'경증 고K~정상 유지.' },
-      { id:'bag:prismasol_4', name:'Prismasol 4 / Multibic 4K', K:4, P:0,   HCO3:32, Ca:1.5,  note:'저K 위험군. P 별도.' },
-      { id:'bag:phoxilium',   name:'Phoxilium',                 K:4, P:1.2, HCO3:30, Ca:1.25, note:'저K+저P 동시. Hemosol 대비 상대적 대사산증·저Ca.' },
-      { id:'bag:biphozyl',    name:'Biphozyl',                  K:4, P:1.0, HCO3:22, Ca:0,    note:'저HCO₃+P. RCA 대사알칼리증 교정용.' }
+      { id:'bag:hemosol_b0',  name:'Hemosol B0 / Prismasol B0', label:'K-free 용액', brands:'Hemosol B0 / Prismasol B0 / MultiBic K-free', K:0, P:0,   HCO3:32, Ca:1.75, note:'무K·무P. 고K 교정 기본액.' },
+      { id:'bag:prismasol_2', name:'Prismasol 2',               label:'2K 용액',     brands:'Prismasol 2 / MultiBic 2K',                  K:2, P:0,   HCO3:32, Ca:1.75, note:'경증 고K~정상 유지.' },
+      { id:'bag:prismasol_3', name:'MultiBic 3K',               label:'3K 용액',     brands:'MultiBic 3K',                                K:3, P:0,   HCO3:35, Ca:1.5,  note:'가장 범용. P 별도(무인산).' },
+      { id:'bag:prismasol_4', name:'Prismasol 4 / Multibic 4K', label:'4K 용액',     brands:'Prismasol 4 / MultiBic 4K',                  K:4, P:0,   HCO3:32, Ca:1.5,  note:'저K 위험군. P 별도.' },
+      { id:'bag:phoxilium',   name:'Phoxilium',                 label:'P 함유 용액', brands:'Phoxilium',                                  K:4, P:1.2, HCO3:30, Ca:1.25, note:'저K+저P 동시. Hemosol 대비 상대적 대사산증·저Ca.' },
+      { id:'bag:biphozyl',    name:'Biphozyl',                  label:'저HCO₃+P 용액', brands:'Biphozyl',                                K:4, P:1.0, HCO3:22, Ca:0,    note:'저HCO₃+P. RCA 대사알칼리증 교정용.' }
     ],
     hypoKincidence:'최대 24%', hypoPincidence:'27–78% (고용량일수록↑)',
     /* P0-2: K 기반 백 선택 매트릭스 (DATA화 — suggestPremixBag이 순회).
@@ -7189,6 +7307,7 @@ function calcCRRT(){
   }
   html+='<div class="ban ban-info" style="margin-top:8px;"><span class="ban-icon">💡</span><span><b>FF 원리:</b> dialysate는 FF 무관(확산). 전치환↑·BFR↑로 FF↓. 빈혈(저Hct)은 plasma flow↑로 FF 유리. <b>[현장 팁]</b> BFR 130→150 전환이 FF를 응고 한계(25%) 아래로 끌어내리는 흔한 전략.</span></div>';
   out.innerHTML=html;
+  if(typeof renderCRRTSummary==='function'){ try{ renderCRRTSummary(); }catch(e){} }
 }
 
 function calcCRRTbag(){
@@ -7198,8 +7317,9 @@ function calcCRRTbag(){
   if(!sel){ out.innerHTML=''; return; }
   var bag=crrtBagById(sel.bag);
   var html='<div style="background:var(--teal-lt,#ccfbf1);border:1.5px solid var(--teal);border-radius:10px;padding:12px;">';
-  html+='<div style="font-size:11px;color:var(--teal);font-weight:700;text-transform:uppercase;">매칭 premix 백 (참고)</div>';
-  html+='<div style="font-size:18px;font-weight:800;color:var(--teal);margin:2px 0;">'+bag.name+'</div>';
+  html+='<div style="font-size:11px;color:var(--teal);font-weight:700;text-transform:uppercase;">매칭 용액 (참고)</div>';
+  html+='<div style="font-size:18px;font-weight:800;color:var(--teal);margin:2px 0;">'+(bag.label||bag.name)+'</div>';
+  html+='<div style="font-size:11px;color:var(--muted);margin-bottom:2px;">'+(bag.brands||bag.name)+'</div>';
   html+='<div style="font-size:12px;color:var(--muted);">'+sel.reason+'</div>';
   html+='<div style="font-size:12px;color:var(--ink,#1a2230);margin-top:6px;font-family:var(--mono);">K '+bag.K+' · P '+bag.P+' · HCO₃ '+bag.HCO3+' · Ca '+bag.Ca+' (mmol/L)</div>';
   html+='<div style="font-size:11px;color:var(--muted);margin-top:4px;">'+bag.note+'</div>';
@@ -7224,6 +7344,7 @@ function calcCRRTbag(){
     html+='<div class="ban '+phCls+'" style="margin-top:8px;"><span class="ban-icon">'+phIcon+'</span><span><b>[산염기] pH 기반 백 보정:</b><br>'+phMsg+'</span></div>';
   }
   out.innerHTML=html;
+  if(typeof renderCRRTSummary==='function'){ try{ renderCRRTSummary(); }catch(e){} }
 }
 
 function calcCRRTrca(){
@@ -7245,10 +7366,48 @@ function calcCRRTrca(){
   out.innerHTML=html;
 }
 
+function renderCRRTSummary(){
+  var out=document.getElementById('crrt-summary'); if(!out) return;
+  var pre=crrtNum('crrt-pre')||0, post=crrtNum('crrt-post')||0, dial=crrtNum('crrt-dial')||0,
+      uf=crrtNum('crrt-uf')||0, bfr=crrtNum('crrt-bfr'), hct=crrtNum('crrt-hct'), wt=crrtNum('crrt-wt');
+  var dose=calcEffluentDose(pre,post,dial,uf,wt);
+  var ff=calcFilFraction(bfr,hct,pre,post,uf,0);
+  var K=crrtNum('crrt-k'), P=crrtNum('crrt-p');
+
+  // dose 색상
+  var doseColor='var(--teal)';
+  if(dose!=null){
+    if(dose>CRRT.dose.highDoseNotRecommended) doseColor='var(--red)';
+    else if(dose>=CRRT.dose.standard[0]&&dose<=CRRT.dose.standard[1]) doseColor='var(--green)';
+    else doseColor='var(--orange)';
+  }
+  var ffColor=crrtFFColor(ff);
+
+  // 추천 용액
+  var sel=suggestPremixBag(K,P), bag=sel?crrtBagById(sel.bag):null;
+
+  var cards='';
+  cards+='<div style="flex:1;min-width:90px;background:var(--surface2);border-radius:9px;padding:9px 8px;text-align:center;">'
+       +'<div style="font-size:9.5px;color:var(--muted);font-weight:700;text-transform:uppercase;">Effluent</div>'
+       +'<div style="font-size:21px;font-weight:800;color:'+doseColor+';font-family:var(--mono);line-height:1.1;">'+(dose!=null?dose:'—')+'</div>'
+       +'<div style="font-size:9px;color:var(--muted);">mL/kg/h</div></div>';
+  cards+='<div style="flex:1;min-width:90px;background:var(--surface2);border-radius:9px;padding:9px 8px;text-align:center;">'
+       +'<div style="font-size:9.5px;color:var(--muted);font-weight:700;text-transform:uppercase;">FF</div>'
+       +'<div style="font-size:21px;font-weight:800;color:'+ffColor+';font-family:var(--mono);line-height:1.1;">'+(ff!=null?ff+'%':'—')+'</div>'
+       +'<div style="font-size:9px;color:var(--muted);">목표&lt;25%</div></div>';
+  if(bag){
+    cards+='<div style="flex:1.4;min-width:120px;background:var(--teal-lt,#ccfbf1);border:1px solid var(--teal);border-radius:9px;padding:9px 10px;">'
+         +'<div style="font-size:9.5px;color:var(--teal);font-weight:700;text-transform:uppercase;">추천 용액</div>'
+         +'<div style="font-size:15px;font-weight:800;color:var(--teal);line-height:1.15;">'+(bag.label||bag.name)+'</div>'
+         +'<div style="font-size:9.5px;color:var(--muted);">'+(bag.brands||'')+'</div></div>';
+  }
+  out.innerHTML='<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;">'+cards+'</div>';
+}
+
 function initCRRT(){
   // 상단 환자 체중을 CRRT 체중 기본값으로 동기화 (dry weight 필요 시 개별 조정 가능)
   try{ var cw=document.getElementById('crrt-wt'); if(cw && typeof bwt==='function') cw.value=bwt(); }catch(e){}
-  calcCRRT(); calcCRRTbag(); calcCRRTrca();
+  calcCRRT(); calcCRRTbag(); calcCRRTrca(); renderCRRTSummary();
 }
 
 </script>
