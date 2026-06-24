@@ -97,21 +97,26 @@ input{-webkit-appearance:none;appearance:none;font-size:16px;} /* 16px 미만이
 .hdr-sub{font-size:11px;color:var(--muted);margin-top:1px;}
 .hdr-feedback{font-size:11.5px;font-weight:600;padding:6px 12px;background:var(--accent-lt);color:var(--accent);border:1px solid var(--accent-bg);border-radius:9px;text-decoration:none;white-space:nowrap;}
 .hdr-feedback:active{background:var(--accent-bg);}
+.hdr-r{display:flex;align-items:center;gap:8px;flex-shrink:0;}
 
 /* ── Patient panel ── */
 
 /* ── 컴팩트 환자 바 (모바일 최적화) ── */
-.pt-compact{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:6px 8px;margin-bottom:8px;box-shadow:var(--sh);}
+.pt-compact{display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:6px 8px;margin-bottom:8px;box-shadow:var(--sh);}
+.pt-fav-btn{flex-shrink:0;width:30px;height:32px;border:none;background:none;font-size:17px;color:var(--yellow,#ca8a04);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;border-radius:7px;padding:0;}
+.pt-fav-btn:active{background:var(--surface2);}
+.pt-fav-btn.on{color:#f59e0b;}
 .pt-compact-name{flex:1;min-width:0;}
-.pt-name-inp{width:100%;border:none;background:none;font-size:14px;font-weight:700;color:var(--text);padding:6px 8px;outline:none;}
+.pt-name-inp{width:100%;border:none;background:none;font-size:14px;font-weight:700;color:var(--text);padding:6px 4px;outline:none;}
 .pt-name-inp::placeholder{color:var(--muted2);font-weight:400;}
 .pt-compact-wt{display:flex;align-items:center;gap:0;background:var(--surface2);border:1px solid var(--border);border-radius:9px;overflow:hidden;flex-shrink:0;}
-.pt-wt-step{width:34px;height:36px;border:none;background:none;font-size:18px;font-weight:700;color:var(--accent);cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.pt-wt-step{width:28px;height:34px;border:none;background:none;font-size:17px;font-weight:700;color:var(--accent);cursor:pointer;display:flex;align-items:center;justify-content:center;}
 .pt-wt-step:active{background:var(--accent-lt);}
-.pt-compact-wt input{width:42px;height:36px;border:none;background:none;text-align:center;font-family:var(--mono);font-size:16px;font-weight:800;color:var(--text);outline:none;padding:0;-moz-appearance:textfield;}
+.pt-compact-wt input{width:34px;height:34px;border:none;background:none;text-align:center;font-family:var(--mono);font-size:15px;font-weight:800;color:var(--text);outline:none;padding:0;-moz-appearance:textfield;}
 .pt-compact-wt input::-webkit-inner-spin-button,.pt-compact-wt input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0;}
-.pt-wt-unit{font-size:11px;color:var(--muted);padding-right:8px;}
-.pt-edit-btn{flex-shrink:0;font-size:11.5px;font-weight:600;color:var(--accent);background:var(--accent-lt);border:1px solid var(--accent-bg);border-radius:8px;padding:8px 10px;cursor:pointer;white-space:nowrap;}
+.pt-wt-unit{font-size:10px;color:var(--muted);padding-right:5px;}
+.pt-edit-btn{flex-shrink:0;font-size:15px;color:var(--accent);background:var(--accent-lt);border:1px solid var(--accent-bg);border-radius:8px;width:32px;height:32px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0;}
+.pt-edit-btn.on{background:var(--accent);border-color:var(--accent);filter:brightness(1.1);}
 .pt-active-btn{flex-shrink:0;display:flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;color:var(--green);background:var(--green-lt);border:1px solid #bbf7d0;border-radius:8px;padding:8px 11px;cursor:pointer;white-space:nowrap;}
 .pt-active-btn.on{background:var(--green);color:#fff;border-color:var(--green);}
 .pt-active-btn.has-drugs:not(.on){background:#dcfce7;}
@@ -769,21 +774,27 @@ input[type=range]::-moz-range-thumb{
 }
 /* Vent 탭 표: 모바일에서 셀 여백·폰트 축소로 화면 폭 안에 수용 */
 .vent-tbl-wrap table{font-size:12px;}
+.vent-tbl-wrap th,.vent-tbl-wrap td{white-space:nowrap;}
 @media (max-width:430px){
   .vent-tbl-wrap{font-size:11px;}
-  .vent-tbl-wrap table{font-size:11px;}
-  .vent-tbl-wrap th,.vent-tbl-wrap td{padding:6px 6px !important;}
-  .vent-tbl-wrap th{font-size:9.5px !important;letter-spacing:0 !important;}
+  .vent-tbl-wrap table{font-size:10.5px;}
+  .vent-tbl-wrap th,.vent-tbl-wrap td{padding:6px 5px !important;}
+  .vent-tbl-wrap th{font-size:9px !important;letter-spacing:0 !important;}
+  /* 큰 숫자 셀(일회호흡량) 폰트 축소 */
+  #tv-tbody td:nth-child(2){font-size:15px !important;}
+  /* L/min 셀 폰트 축소 */
+  #tv-tbody td:nth-child(3),#tv-tbody td:nth-child(4){font-size:11px !important;}
 }
 @media (max-width:359px){
   .vent-tbl-wrap th,.vent-tbl-wrap td{padding:5px 4px !important;}
+  .vent-tbl-wrap table{font-size:9.5px !important;}
 }
 /* 320px급 극소폭: 상단 환자·약물 바 버튼 축소 + 줄바꿈 허용 */
 @media (max-width:420px){
   .pt-compact{flex-wrap:wrap;gap:6px;}
 }
 @media (max-width:340px){
-  .pt-active-btn,.pt-edit-btn{padding:7px 8px;font-size:10.5px;gap:3px;}
+  .pt-active-btn{padding:7px 8px;font-size:10.5px;gap:3px;}
   .app{padding-left:10px;padding-right:10px;}
 }
 
@@ -1157,7 +1168,10 @@ if('serviceWorker' in navigator){
     <div class="logo">💊</div>
     <div class="hdr-title">ICU 약물 계산기</div>
   </div>
-  <button class="hdr-feedback" type="button" onclick="openFeedback()">💬 피드백</button>
+  <div class="hdr-r">
+    <button class="hdr-feedback" type="button" onclick="openFeedback()">💬 피드백</button>
+    <button class="theme-toggle" type="button" onclick="toggleTheme()" id="theme-toggle" aria-label="다크모드 전환" title="다크모드 전환">🌙</button>
+  </div>
 </div>
 
 <div class="sticky-bar" id="sticky-bar">
@@ -1172,9 +1186,9 @@ if('serviceWorker' in navigator){
       <span class="pt-wt-unit">kg</span>
       <button class="pt-wt-step" type="button" onclick="stepBwt(1)">＋</button>
     </div>
-    <button class="pt-edit-btn" type="button" onclick="togPtPanel()" id="pt-edit-btn">빠른설정 ▾</button>
+    <button class="pt-edit-btn" type="button" onclick="togPtPanel()" id="pt-edit-btn" aria-label="빠른설정" title="빠른설정">⚙️</button>
     <button class="pt-active-btn" type="button" onclick="switchTab('active',this)" id="pt-active-btn">💉 현재약물<span class="pt-active-cnt" id="pt-active-cnt"></span></button>
-    <button class="theme-toggle" type="button" onclick="toggleTheme()" id="theme-toggle" aria-label="다크모드 전환" title="다크모드 전환">🌙</button>
+    <button class="pt-fav-btn" type="button" onclick="switchTab('fav',this)" id="pt-fav-btn" aria-label="약물 즐겨찾기" title="약물 즐겨찾기">☆</button>
   </div>
   <div class="pt-quick-wrap" id="pt-quick-wrap" style="display:none;">
     <span class="pt-quick-lbl">빠른 체중</span>
@@ -1198,7 +1212,6 @@ if('serviceWorker' in navigator){
     <button class="tab" type="button" onclick="switchTab('crrt',this)">💧 CRRT<sup style="font-size:8px;font-weight:800;color:#f97316;margin-left:1px;">β</sup></button>
     <button class="tab" type="button" onclick="switchTab('emg',this)">🚨 응급</button>
     <button class="tab" type="button" onclick="switchTab('fluid',this)">💧 수액</button>
-    <button class="tab" type="button" onclick="switchTab('fav',this)">⭐</button>
   </div>
 </div><!-- /sticky-bar -->
 
@@ -1680,8 +1693,8 @@ if('serviceWorker' in navigator){
           <tr style="background:var(--surface2);">
             <th style="padding:10px 14px;text-align:left;font-weight:700;border-bottom:1.5px solid var(--border);color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em;">mL/kg</th>
             <th style="padding:10px 14px;text-align:center;font-weight:700;border-bottom:1.5px solid var(--border);color:var(--muted);font-size:11px;text-transform:uppercase;">일회호흡량</th>
-            <th style="padding:10px 14px;text-align:center;font-weight:700;border-bottom:1.5px solid var(--border);color:var(--muted);font-size:11px;text-transform:uppercase;">분당환기량 (RR 12)</th>
-            <th style="padding:10px 14px;text-align:center;font-weight:700;border-bottom:1.5px solid var(--border);color:var(--muted);font-size:11px;text-transform:uppercase;">분당환기량 (RR 14)</th>
+            <th style="padding:10px 14px;text-align:center;font-weight:700;border-bottom:1.5px solid var(--border);color:var(--muted);font-size:11px;text-transform:uppercase;">MV·RR12</th>
+            <th style="padding:10px 14px;text-align:center;font-weight:700;border-bottom:1.5px solid var(--border);color:var(--muted);font-size:11px;text-transform:uppercase;">MV·RR14</th>
             <th style="padding:10px 14px;text-align:right;font-weight:700;border-bottom:1.5px solid var(--border);color:var(--muted);font-size:11px;text-transform:uppercase;">적응증</th>
           </tr>
         </thead>
@@ -1946,6 +1959,14 @@ if('serviceWorker' in navigator){
         <label class="crrt-lbl">동맥혈 pH (선택)<input type="number" id="crrt-ph" value="" min="6.8" max="7.8" step="0.01" inputmode="decimal" oninput="calcCRRTbag()" placeholder="예: 7.20"></label>
       </div>
       <div id="crrt-bag-out"></div>
+
+      <details class="crrt-acc" style="margin-top:10px;">
+        <summary>📖 용액 가이드 — 종류·조성·적응증 한눈에</summary>
+        <div class="crrt-acc-body">
+          <div style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.5;">프리믹스백은 K(칼륨)·P(인) 두 축으로 고른다. CRRT가 K·P를 계속 빼내므로 <b>유지가 목표면 K 높은 백</b>, <b>인 떨어지면 P 함유백</b>이 흔하다. 브랜드(MultiBic/Prismasol)는 조성 같으면 임상적으로 동일 — 병원 공급계약 차이.</div>
+          <div id="crrt-bag-guide"></div>
+        </div>
+      </details>
       <div class="ban ban-info" style="margin-top:10px;"><span class="ban-icon">📋</span><span><b>[가이드 KSN 2025]</b> 고인산혈증 없으면 인 함유 투석액으로 저인산 예방 고려 (조건부 권고, 근거수준 매우 낮음). <b>[KDIGO]</b> buffer는 bicarbonate 우선 — 국내 상용백(Prismasol·Hemosol·Phoxilium)은 모두 bicarbonate계라 자동 충족.</span></div>
       <div class="ban ban-caution" style="margin-top:8px;"><span class="ban-icon">⚠️</span><span><b>IV NaHCO₃ 드립은 예외:</b> pH &lt;7.15·HCO₃ &lt;10 생명위협 산증에서 <b>CRRT 시작과 동시에 일시적으로만</b> 병용. 일상적 교정 도구 아님(수액 과부하).</span></div>
       <div class="ban ban-caution" style="margin-top:8px;"><span class="ban-icon">📜</span><span><b>[구세대 참조]</b> 무K액(Hemosol B0)에 KCl mix: K&gt;5.0 mix 안 함 · 3.5&lt;K≤5.0 IK40 0.5A · K&lt;3.5 IK40 1A. 현재 premix 백 전환 추세. 수동 mix는 농도오류·오염 위험.</span></div>
@@ -4125,7 +4146,7 @@ function togPtPanel(){
   if(!w)return;
   var open=w.style.display!=='none';
   w.style.display=open?'none':'flex';
-  if(btn)btn.innerHTML=open?'빠른설정 ▾':'빠른설정 ▴';
+  if(btn)btn.classList.toggle('on', !open);
 }
 function setD(id,v,fn){document.getElementById(id).value=v;fn();}
 function fmt(n){if(!isFinite(n))return'—';return n<10?(Math.round(n*100)/100).toFixed(2):(Math.round(n*10)/10).toFixed(1);}
@@ -4900,21 +4921,20 @@ function cIBW(){
           : '<span style="background:#f3f4f6;color:#6b7280;border-radius:6px;padding:2px 8px;font-size:10px;font-weight:700;">일반</span>';
 
       html += '<tr style="'+rowBg+'">'
-        +'<td style="padding:10px 14px;font-family:var(--mono);font-weight:700;font-size:15px;color:'+tvColor+';">'+mlkg+' mL/kg</td>'
+        +'<td style="padding:10px 14px;font-family:var(--mono);font-weight:700;font-size:15px;white-space:nowrap;color:'+tvColor+';">'+mlkg+'&nbsp;mL/kg</td>'
         +'<td style="padding:10px 14px;text-align:center;font-family:var(--mono);font-weight:800;font-size:26px;color:'+tvColor+';letter-spacing:-1px;">'+tv+'</td>'
-        +'<td style="padding:10px 14px;text-align:center;font-family:var(--mono);font-weight:700;font-size:14px;color:var(--text2);">'+mv12+' L/min</td>'
-        +'<td style="padding:10px 14px;text-align:center;font-family:var(--mono);font-weight:700;font-size:14px;color:var(--text2);">'+mv14+' L/min</td>'
-        +'<td style="padding:10px 14px;text-align:right;">'+badge+'</td>'
+        +'<td style="padding:10px 14px;text-align:center;font-family:var(--mono);font-weight:700;font-size:14px;white-space:nowrap;color:var(--text2);">'+mv12+'&nbsp;L/min</td>'
+        +'<td style="padding:10px 14px;text-align:center;font-family:var(--mono);font-weight:700;font-size:14px;white-space:nowrap;color:var(--text2);">'+mv14+'&nbsp;L/min</td>'
+        +'<td style="padding:10px 14px;text-align:right;white-space:nowrap;">'+badge+'</td>'
         +'</tr>';
     }
     tbody.innerHTML = html;
   }
 
-  // 기준 안내
+  // 기준 안내 — 평상시 문구는 생략(이미 위 IBW 패널·TV평가에서 확인 가능), 비만 경고만 표시
   var noteEl = document.getElementById('tv-note');
   if(noteEl){
-    noteEl.innerHTML = '현재 기준: <b>'+basisLabel+' '+basis+' kg</b>'
-      + (tvBasis==='tbw' && isObese ? ' &nbsp;<span style="color:var(--orange);font-weight:700;">⚠️ 비만 환자 — IBW 기준으로 전환 권장</span>' : '');
+    noteEl.innerHTML = (tvBasis==='tbw' && isObese ? '<span style="color:var(--orange);font-weight:700;">⚠️ 비만 환자 — IBW 기준으로 전환 권장</span>' : '');
   }
 
   // 공용 바의 현재 TV가 IBW 기준 몇 mL/kg인지 — 폐보호 목표와 직접 연결
@@ -4948,6 +4968,9 @@ function switchTab(name,btn){
   // 환자 바의 현재약물 버튼 active 표시
   var actBtn=document.getElementById('pt-active-btn');
   if(actBtn) actBtn.classList.toggle('on',name==='active');
+  // 즐겨찾기 별표 버튼 active 표시 (☆ ↔ ★)
+  var favBtn=document.getElementById('pt-fav-btn');
+  if(favBtn){ favBtn.classList.toggle('on',name==='fav'); favBtn.textContent=(name==='fav')?'★':'☆'; }
   var names=['vp','sd','ot','cardio','calc','ibw','emg','fluid','elyte','active','fav','crrt'];
   if(name!=='fav' && typeof favReturnCards==='function') favReturnCards();
   for(var i=0;i<names.length;i++) document.getElementById('tab-'+names[i]).style.display=names[i]===name?'block':'none';
@@ -7124,12 +7147,12 @@ var CRRT = {
   },
   electrolyteBags: {
     products: [
-      { id:'bag:hemosol_b0',  name:'Hemosol B0 / Prismasol B0', label:'K-free 용액', brands:'Hemosol B0 / Prismasol B0 / MultiBic K-free', K:0, P:0,   HCO3:32, Ca:1.75, note:'무K·무P. 고K 교정 기본액.' },
-      { id:'bag:prismasol_2', name:'Prismasol 2',               label:'2K 용액',     brands:'Prismasol 2 / MultiBic 2K',                  K:2, P:0,   HCO3:32, Ca:1.75, note:'경증 고K~정상 유지.' },
-      { id:'bag:prismasol_3', name:'MultiBic 3K',               label:'3K 용액',     brands:'MultiBic 3K',                                K:3, P:0,   HCO3:35, Ca:1.5,  note:'가장 범용. P 별도(무인산).' },
-      { id:'bag:prismasol_4', name:'Prismasol 4 / Multibic 4K', label:'4K 용액',     brands:'Prismasol 4 / MultiBic 4K',                  K:4, P:0,   HCO3:32, Ca:1.5,  note:'저K 위험군. P 별도.' },
-      { id:'bag:phoxilium',   name:'Phoxilium',                 label:'P 함유 용액', brands:'Phoxilium',                                  K:4, P:1.2, HCO3:30, Ca:1.25, note:'저K+저P 동시. Hemosol 대비 상대적 대사산증·저Ca.' },
-      { id:'bag:biphozyl',    name:'Biphozyl',                  label:'저HCO₃+P 용액', brands:'Biphozyl',                                K:4, P:1.0, HCO3:22, Ca:0,    note:'저HCO₃+P. RCA 대사알칼리증 교정용.' }
+      { id:'bag:hemosol_b0',  name:'Hemosol B0 / Prismasol B0', label:'K-free 용액', brands:'Hemosol B0 / Prismasol B0 / MultiBic K-free', indication:'심한 고K. K를 적극적으로 빼야 할 때', K:0, P:0,   HCO3:32, Ca:1.75, note:'무K·무P. 고K 교정 기본액.' },
+      { id:'bag:prismasol_2', name:'Prismasol 2',               label:'2K 용액',     brands:'Prismasol 2 / MultiBic 2K',                  indication:'경증 고K~정상 유지. K 완만히 하강', K:2, P:0,   HCO3:32, Ca:1.75, note:'경증 고K~정상 유지.' },
+      { id:'bag:prismasol_3', name:'MultiBic 3K',               label:'3K 용액',     brands:'MultiBic 3K',                                indication:'가장 범용. K 정상 유지가 목표', K:3, P:0,   HCO3:35, Ca:1.5,  note:'가장 범용. P 별도(무인산).' },
+      { id:'bag:prismasol_4', name:'Prismasol 4 / Multibic 4K', label:'4K 용액',     brands:'Prismasol 4 / MultiBic 4K',                  indication:'저K 위험군. K 하강 방지', K:4, P:0,   HCO3:32, Ca:1.5,  note:'저K 위험군. P 별도.' },
+      { id:'bag:phoxilium',   name:'Phoxilium',                 label:'P 함유 용액', brands:'Phoxilium',                                  indication:'저K + 저P 동시. 인 보충 필요 시', K:4, P:1.2, HCO3:30, Ca:1.25, note:'저K+저P 동시. Hemosol 대비 상대적 대사산증·저Ca.' },
+      { id:'bag:biphozyl',    name:'Biphozyl',                  label:'저HCO₃+P 용액', brands:'Biphozyl',                                indication:'RCA 중 대사알칼리증 교정 (특수)', K:4, P:1.0, HCO3:22, Ca:0,    note:'저HCO₃+P. RCA 대사알칼리증 교정용.' }
     ],
     hypoKincidence:'최대 24%', hypoPincidence:'27–78% (고용량일수록↑)',
     /* P0-2: K 기반 백 선택 매트릭스 (DATA화 — suggestPremixBag이 순회).
@@ -7366,6 +7389,35 @@ function calcCRRTrca(){
   out.innerHTML=html;
 }
 
+function renderCRRTBagGuide(){
+  var out=document.getElementById('crrt-bag-guide'); if(!out) return;
+  if(typeof CRRT==='undefined'||!CRRT.electrolyteBags) return;
+  var bags=CRRT.electrolyteBags.products||[];
+  var html='<div style="display:flex;flex-direction:column;gap:7px;">';
+  for(var i=0;i<bags.length;i++){
+    var b=bags[i];
+    // P 함유 여부로 좌측 색 띠 구분 (P>0 = 청록, 무인산 = 회색, Biphozyl 특수 = 주황)
+    var accent = b.id==='bag:biphozyl' ? 'var(--orange)' : (b.P>0 ? 'var(--teal)' : 'var(--muted2)');
+    html+='<div style="border-left:3px solid '+accent+';background:var(--surface2);border-radius:7px;padding:8px 11px;">'
+        + '<div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;">'
+        +   '<span style="font-size:13px;font-weight:800;color:var(--text);">'+b.label+'</span>'
+        +   '<span style="font-size:10.5px;color:var(--muted);">'+b.brands+'</span>'
+        + '</div>'
+        + '<div style="font-size:11.5px;color:var(--text2);margin:3px 0;">'+(b.indication||b.note)+'</div>'
+        + '<div style="font-size:11px;color:var(--muted);font-family:var(--mono);">K '+b.K+' · P '+b.P+' · HCO₃ '+b.HCO3+' · Ca '+b.Ca+' <span style="color:var(--muted2);">(mmol/L)</span></div>'
+        + '</div>';
+  }
+  html+='</div>';
+  // 범례 + 핵심 주의
+  html+='<div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;font-size:10.5px;color:var(--muted);">'
+      + '<span><span style="display:inline-block;width:9px;height:9px;background:var(--muted2);border-radius:2px;vertical-align:middle;"></span> 무인산</span>'
+      + '<span><span style="display:inline-block;width:9px;height:9px;background:var(--teal);border-radius:2px;vertical-align:middle;"></span> 인(P) 함유</span>'
+      + '<span><span style="display:inline-block;width:9px;height:9px;background:var(--orange);border-radius:2px;vertical-align:middle;"></span> RCA 특수</span>'
+      + '</div>';
+  html+='<div class="ban ban-caution" style="margin-top:8px;"><span class="ban-icon">⚠️</span><span><b>주의:</b> Phoxilium은 HCO₃·Ca가 낮아 <b>산증(pH&lt;7.25)엔 교정력 약함</b>·저Ca 악화 가능. Biphozyl은 일반 유지용 아님 — <b>RCA 대사알칼리증 교정 전용</b>(Ca 0).</span></div>';
+  out.innerHTML=html;
+}
+
 function renderCRRTSummary(){
   var out=document.getElementById('crrt-summary'); if(!out) return;
   var pre=crrtNum('crrt-pre')||0, post=crrtNum('crrt-post')||0, dial=crrtNum('crrt-dial')||0,
@@ -7407,7 +7459,7 @@ function renderCRRTSummary(){
 function initCRRT(){
   // 상단 환자 체중을 CRRT 체중 기본값으로 동기화 (dry weight 필요 시 개별 조정 가능)
   try{ var cw=document.getElementById('crrt-wt'); if(cw && typeof bwt==='function') cw.value=bwt(); }catch(e){}
-  calcCRRT(); calcCRRTbag(); calcCRRTrca(); renderCRRTSummary();
+  calcCRRT(); calcCRRTbag(); calcCRRTrca(); renderCRRTSummary(); renderCRRTBagGuide();
 }
 
 </script>
