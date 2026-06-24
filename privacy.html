@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="index,follow">
+<title>개인정보처리방침 · ICU 약물 계산기 / Privacy Policy</title>
+<style>
+  :root{
+    --bg:#f7f8fa; --surface:#ffffff; --ink:#1a2230; --muted:#5a6678;
+    --muted2:#8b95a5; --border:#e3e8ef; --accent:#2563eb; --accent-lt:#eff4ff;
+    --maxw:760px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+    line-height:1.7; font-size:15px; padding:0 18px;
+  }
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:40px 0 80px;}
+  header{border-bottom:2px solid var(--ink); padding-bottom:20px; margin-bottom:8px;}
+  h1{font-size:23px; font-weight:800; letter-spacing:-.4px; margin:0 0 6px;}
+  .sub{font-size:13px; color:var(--muted); margin:0;}
+  .lang-toggle{display:flex; gap:8px; margin:24px 0 32px;}
+  .lang-toggle button{
+    font-size:13px; font-weight:700; padding:7px 16px; border-radius:8px;
+    border:1px solid var(--border); background:var(--surface); color:var(--muted);
+    cursor:pointer; transition:all .12s;
+  }
+  .lang-toggle button.active{background:var(--ink); color:#fff; border-color:var(--ink);}
+  .meta{
+    background:var(--accent-lt); border:1px solid #d4e2ff; border-radius:10px;
+    padding:14px 16px; font-size:13px; color:var(--muted); margin-bottom:28px;
+  }
+  .meta b{color:var(--ink);}
+  h2{
+    font-size:16px; font-weight:800; margin:34px 0 10px; padding-top:8px;
+    letter-spacing:-.2px;
+  }
+  h2 .n{color:var(--accent); margin-right:8px; font-variant-numeric:tabular-nums;}
+  p{margin:0 0 12px;}
+  ul{margin:0 0 14px; padding-left:20px;}
+  li{margin-bottom:7px;}
+  .key{
+    background:var(--surface); border:1px solid var(--border); border-radius:10px;
+    padding:4px 16px; margin:14px 0;
+  }
+  .key li{margin:10px 0;}
+  strong{font-weight:700;}
+  code{
+    background:#f0f2f5; padding:1px 6px; border-radius:4px; font-size:13px;
+    font-family:"SF Mono",Menlo,Consolas,monospace; color:#c0392b;
+  }
+  a{color:var(--accent);}
+  .highlight{background:#fffbe6; padding:1px 4px; border-radius:3px;}
+  footer{
+    margin-top:48px; padding-top:20px; border-top:1px solid var(--border);
+    font-size:12px; color:var(--muted2);
+  }
+  .lang{display:none;}
+  .lang.show{display:block;}
+  @media (max-width:480px){
+    body{font-size:14px;}
+    h1{font-size:20px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>개인정보처리방침<span style="color:var(--muted2);font-weight:400;font-size:15px;"> / Privacy Policy</span></h1>
+    <p class="sub">ICU 약물 계산기 (ICU Drug Calculator)</p>
+  </header>
+
+  <div class="lang-toggle">
+    <button id="btn-ko" class="active" onclick="setLang('ko')">한국어</button>
+    <button id="btn-en" onclick="setLang('en')">English</button>
+  </div>
+
+  <!-- ===================== 한국어 ===================== -->
+  <div id="lang-ko" class="lang show">
+    <div class="meta">
+      <b>시행일:</b> 2026년 6월 24일 &nbsp;·&nbsp; <b>최종 수정일:</b> 2026년 6월 24일<br>
+      <b>앱 이름:</b> ICU 약물 계산기 &nbsp;·&nbsp; <b>문의:</b> zibandal@gmail.com
+    </div>
+
+    <p>ICU 약물 계산기(이하 "본 앱")는 중환자 진료에 사용되는 약물 용량·임상 계산을 보조하는 도구입니다. 본 방침은 본 앱이 이용자의 정보를 어떻게 처리하는지를 설명합니다. 본 앱은 이용자의 개인정보 보호를 중요하게 생각하며, 진료에 직접 입력되는 정보를 외부로 전송하지 않는 것을 원칙으로 설계되었습니다.</p>
+
+    <h2><span class="n">1.</span>핵심 요약</h2>
+    <div class="key">
+      <ul>
+        <li><strong>환자 관련 입력값(환자명·체중 등)은 이용자의 기기 안에만 저장되며, 외부 서버로 전송되지 않습니다.</strong></li>
+        <li>본 앱은 회원가입·로그인이 없으며, 이름·연락처 등 이용자를 식별하는 계정 정보를 수집하지 않습니다.</li>
+        <li>익명화된 사용 통계(어떤 화면이 열렸는지 등)와, 이용자가 직접 보낸 피드백만이 외부로 전송됩니다.</li>
+      </ul>
+    </div>
+
+    <h2><span class="n">2.</span>기기 내에만 저장되는 정보</h2>
+    <p>아래 정보는 이용자의 기기 저장소(브라우저 localStorage)에만 보관되며, <strong>본 앱의 서버나 제3자에게 전송되지 않습니다.</strong> 앱을 삭제하거나 브라우저 저장 데이터를 지우면 함께 삭제됩니다.</p>
+    <ul>
+      <li><strong>환자 세션 정보:</strong> 이용자가 입력한 환자명, 체중 등 계산을 위해 입력한 값. 여러 환자를 전환해 쓰기 위한 용도이며 기기에만 남습니다.</li>
+      <li><strong>화면 설정:</strong> 다크 모드 등 표시 설정.</li>
+      <li><strong>익명 식별자:</strong> 중복 사용 통계 집계를 위한 무작위 ID(개인을 식별하지 않음).</li>
+    </ul>
+
+    <h2><span class="n">3.</span>외부로 전송되는 정보</h2>
+    <p>본 앱이 외부로 보내는 정보는 아래 두 가지뿐이며, <span class="highlight">어느 경우에도 환자 관련 입력값(환자명·체중 등)은 포함되지 않습니다.</span></p>
+    <ul>
+      <li><strong>(가) 익명 사용 통계 — Vercel Analytics:</strong> 앱의 안정성과 개선을 위해, 어떤 탭/화면이 열렸는지와 같은 익명 사용 정보가 집계됩니다. 이 과정에서 기기·접속 환경 정보(대략적 지역, 기기 종류 등)가 통계 목적으로 처리될 수 있습니다. 개인을 식별하기 위한 정보는 수집하지 않습니다.</li>
+      <li><strong>(나) 피드백 — Formspree:</strong> 이용자가 앱 안의 "피드백" 기능을 직접 사용해 의견을 보낼 때에만, 입력한 메시지 내용과 (이용자가 선택적으로 적은 경우) 회신용 이메일 주소가 전송됩니다. 보내지 않으면 아무것도 전송되지 않습니다.</li>
+    </ul>
+
+    <h2><span class="n">4.</span>제3자 서비스</h2>
+    <p>본 앱은 아래 외부 서비스를 이용하며, 각 서비스는 자체 개인정보처리방침을 따릅니다.</p>
+    <ul>
+      <li><strong>Vercel</strong> (호스팅 및 사용 통계) — <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener">vercel.com/legal/privacy-policy</a></li>
+      <li><strong>Formspree</strong> (피드백 전송) — <a href="https://formspree.io/legal/privacy-policy" target="_blank" rel="noopener">formspree.io/legal/privacy-policy</a></li>
+    </ul>
+
+    <h2><span class="n">5.</span>의료 정보에 대한 안내</h2>
+    <p>본 앱은 임상 의사결정을 보조하는 참고 도구이며, 의료적 판단을 대체하지 않습니다. 본 앱에 입력하는 환자 관련 값은 위에 설명한 대로 기기에만 저장됩니다. 다만 여러 사람이 함께 쓰는 공용 기기에서는, 이전 이용자가 입력한 값이 기기에 남아 있을 수 있으므로, 환자 정보를 입력해 사용하신 경우 사용 후 기기의 저장 데이터를 정리하시기를 권장합니다.</p>
+
+    <h2><span class="n">6.</span>데이터 보관 및 삭제</h2>
+    <p>기기에 저장된 정보는 이용자가 직접 삭제할 때까지 보관됩니다. 다음 방법으로 언제든지 삭제할 수 있습니다.</p>
+    <ul>
+      <li>앱(또는 브라우저)의 저장 데이터·캐시 삭제</li>
+      <li>앱 삭제(제거)</li>
+    </ul>
+    <p>피드백으로 보낸 내용의 삭제를 원하시면 아래 문의 이메일로 요청해 주시기 바랍니다.</p>
+
+    <h2><span class="n">7.</span>아동의 개인정보</h2>
+    <p>본 앱은 의료 종사자의 업무 사용을 대상으로 하며, 아동을 대상으로 하지 않습니다. 본 앱은 이용자를 식별하는 개인정보를 수집하지 않습니다.</p>
+
+    <h2><span class="n">8.</span>방침의 변경</h2>
+    <p>본 방침은 법령이나 앱 기능 변경에 따라 개정될 수 있으며, 변경 시 본 페이지의 수정일이 갱신됩니다.</p>
+
+    <h2><span class="n">9.</span>문의처</h2>
+    <p>개인정보 처리에 관한 문의는 아래로 연락해 주시기 바랍니다.</p>
+    <ul>
+      <li><strong>이메일:</strong> zibandal@gmail.com</li>
+    </ul>
+  </div>
+
+  <!-- ===================== English ===================== -->
+  <div id="lang-en" class="lang">
+    <div class="meta">
+      <b>Effective date:</b> June 24, 2026 &nbsp;·&nbsp; <b>Last updated:</b> June 24, 2026<br>
+      <b>App name:</b> ICU Drug Calculator &nbsp;·&nbsp; <b>Contact:</b> zibandal@gmail.com
+    </div>
+
+    <p>ICU Drug Calculator ("the App") is a tool that assists with drug-dosing and clinical calculations used in critical care. This policy explains how the App handles your information. The App is designed on the principle that information you enter for patient care is not transmitted to any external server.</p>
+
+    <h2><span class="n">1.</span>Summary</h2>
+    <div class="key">
+      <ul>
+        <li><strong>Patient-related inputs (such as patient name and body weight) are stored only on your device and are never sent to any external server.</strong></li>
+        <li>The App has no sign-up or login and does not collect account information that identifies you, such as your name or contact details.</li>
+        <li>Only anonymous usage statistics (such as which screens are opened) and feedback you choose to send are transmitted externally.</li>
+      </ul>
+    </div>
+
+    <h2><span class="n">2.</span>Information stored only on your device</h2>
+    <p>The following is kept only in your device storage (browser localStorage) and is <strong>not transmitted to our servers or any third party.</strong> It is removed when you uninstall the App or clear the browser's stored data.</p>
+    <ul>
+      <li><strong>Patient session data:</strong> Values you enter such as patient name and body weight, used so you can switch between patients. This stays on your device.</li>
+      <li><strong>Display settings:</strong> Preferences such as dark mode.</li>
+      <li><strong>Anonymous identifier:</strong> A random ID used only to de-duplicate usage statistics. It does not identify you.</li>
+    </ul>
+
+    <h2><span class="n">3.</span>Information transmitted externally</h2>
+    <p>The only information the App sends externally is the following two items, and <span class="highlight">in no case do they include patient-related inputs (patient name, body weight, etc.).</span></p>
+    <ul>
+      <li><strong>(a) Anonymous usage analytics — Vercel Analytics:</strong> To improve stability and quality, anonymous usage information such as which tab/screen is opened is aggregated. In this process, device and connection information (such as approximate region and device type) may be processed for statistical purposes. No personally identifying information is collected.</li>
+      <li><strong>(b) Feedback — Formspree:</strong> Only when you actively use the in-app "Feedback" feature, the message you write and — if you choose to provide it — a reply email address are transmitted. If you do not send feedback, nothing is transmitted.</li>
+    </ul>
+
+    <h2><span class="n">4.</span>Third-party services</h2>
+    <p>The App uses the following external services, each governed by its own privacy policy.</p>
+    <ul>
+      <li><strong>Vercel</strong> (hosting and usage analytics) — <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener">vercel.com/legal/privacy-policy</a></li>
+      <li><strong>Formspree</strong> (feedback delivery) — <a href="https://formspree.io/legal/privacy-policy" target="_blank" rel="noopener">formspree.io/legal/privacy-policy</a></li>
+    </ul>
+
+    <h2><span class="n">5.</span>Note on medical information</h2>
+    <p>The App is a reference tool that assists clinical decision-making and does not replace medical judgment. Patient-related values you enter are stored only on your device as described above. On shared devices, values entered by a previous user may remain on the device; if you have entered patient information, we recommend clearing the device's stored data after use.</p>
+
+    <h2><span class="n">6.</span>Data retention and deletion</h2>
+    <p>Information stored on your device is retained until you delete it. You can remove it at any time by:</p>
+    <ul>
+      <li>Clearing the App's (or browser's) stored data and cache</li>
+      <li>Uninstalling the App</li>
+    </ul>
+    <p>To request deletion of feedback you have sent, please contact us at the email below.</p>
+
+    <h2><span class="n">7.</span>Children's privacy</h2>
+    <p>The App is intended for professional use by healthcare workers and is not directed to children. The App does not collect personal information that identifies users.</p>
+
+    <h2><span class="n">8.</span>Changes to this policy</h2>
+    <p>This policy may be revised in response to legal requirements or changes to the App. When it changes, the "Last updated" date on this page will be updated.</p>
+
+    <h2><span class="n">9.</span>Contact</h2>
+    <p>For inquiries regarding the handling of your information, please contact:</p>
+    <ul>
+      <li><strong>Email:</strong> zibandal@gmail.com</li>
+    </ul>
+  </div>
+
+  <footer>
+    ICU 약물 계산기 · Privacy Policy · Last updated 2026-06-24
+  </footer>
+</div>
+
+<script>
+  function setLang(l){
+    document.getElementById('lang-ko').classList.toggle('show', l==='ko');
+    document.getElementById('lang-en').classList.toggle('show', l==='en');
+    document.getElementById('btn-ko').classList.toggle('active', l==='ko');
+    document.getElementById('btn-en').classList.toggle('active', l==='en');
+    document.documentElement.lang = l;
+  }
+</script>
+</body>
+</html>
