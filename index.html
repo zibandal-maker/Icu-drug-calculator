@@ -537,6 +537,10 @@ input[type=range]::-moz-range-thumb{
 .ftab.active{background:var(--accent-lt);border-color:var(--accent);color:var(--accent);}
 .titration-table{width:100%;border-collapse:collapse;font-size:13px;}
 .emg-section{margin-bottom:10px;border-radius:10px;overflow:hidden;box-shadow:var(--sh);}
+.emg-section>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;}
+.emg-section>summary::-webkit-details-marker{display:none;}
+.emg-caret{font-size:12px;opacity:.8;transition:transform .15s;margin-left:auto;}
+.emg-section[open] .emg-caret{transform:rotate(180deg);}
 .emg-sec-hdr{padding:9px 14px;font-size:12px;font-weight:800;color:#fff;letter-spacing:.05em;text-transform:uppercase;}
 .emg-list{background:var(--surface);border:1px solid var(--border);border-top:none;border-radius:0 0 10px 10px;}
 .emg-item{display:flex;align-items:center;justify-content:space-between;padding:9px 14px;border-bottom:.5px solid var(--border);gap:12px;}
@@ -576,6 +580,10 @@ input[type=range]::-moz-range-thumb{
 .fset-btn.active{background:var(--accent-lt);border-color:var(--accent);color:var(--accent);}
 
 .fluid-top-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;margin-bottom:0;}
+.fluid-card-acc>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:6px;}
+.fluid-card-acc>summary::-webkit-details-marker{display:none;}
+.fluid-card-acc .fluid-caret{font-size:12px;opacity:.7;margin-left:auto;transition:transform .15s;}
+.fluid-card-acc[open] .fluid-caret{transform:rotate(180deg);}
 @media(max-width:640px){.fluid-top-grid{grid-template-columns:1fr;}}
 
 .fluid-card{background:var(--surface);border:1px solid var(--border);
@@ -760,7 +768,8 @@ input[type=range]::-moz-range-thumb{
 .elyte-safety-line{font-size:11.5px;line-height:1.55;padding:7px 11px;border-radius:7px;background:var(--surface2);margin-bottom:5px;color:var(--text2);}
 .elyte-ref{font-size:10px;color:var(--muted2);line-height:1.6;border-top:1px solid var(--border);padding-top:9px;}
 @media (max-width:480px){ .elyte-inputs{grid-template-columns:1fr;} }
-@media (max-width:560px){ .ibw-layout{grid-template-columns:1fr !important;} }
+@media (max-width:560px){ .ibw-layout{grid-template-columns:1fr 1fr !important;gap:7px !important;} }
+@media (max-width:380px){ .ibw-layout{grid-template-columns:1fr !important;} }
 /* 모바일 카드 간격 압축 — Vent/CRRT 탭 세로 공간 절약 */
 @media (max-width:480px){
   /* 직계 카드 블록 하단 여백 축소 */
@@ -1538,7 +1547,7 @@ if('serviceWorker' in navigator){
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
       <span style="font-size:13px;font-weight:800;color:var(--cyan,#06b6d4);">🎛️ 현재 Ventilator Setting</span>
     </div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(84px,1fr));gap:8px 8px;">
+    <div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;max-width:430px;">
       <label class="vent-lbl">FiO₂<input type="number" id="vs-fio2" value="0.4" min="0.21" max="1" step="0.05" inputmode="decimal" placeholder="소수" oninput="recalcVentAll()"></label>
       <label class="vent-lbl">PEEP<input type="number" id="vs-peep" value="5" min="0" step="1" inputmode="decimal" placeholder="cmH₂O" oninput="recalcVentAll()"></label>
       <label class="vent-lbl">Plateau<input type="number" id="vs-plateau" value="" min="0" step="1" inputmode="decimal" placeholder="cmH₂O" oninput="recalcVentAll()"></label>
@@ -1664,7 +1673,10 @@ if('serviceWorker' in navigator){
 
     <!-- 우: 실제체중 vs IBW -->
     <div id="ibw-compare-card" style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--rl);padding:14px 16px;min-width:0;">
-      <div style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;">실제체중 vs IBW</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:8px;">
+        <span style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;white-space:nowrap;">실제체중 vs IBW</span>
+        <span id="ibw-compare-badge" style="flex-shrink:0;"></span>
+      </div>
       <div id="ibw-compare" style="font-size:12px;line-height:1.6;"></div>
     </div>
 
@@ -2044,67 +2056,67 @@ if('serviceWorker' in navigator){
     <span style="color:var(--muted2);">Reference: Resuscitation Council UK · ALS guidelines · SSC 2021</span>
   </div>
 
-  <div class="emg-section"><div class="emg-sec-hdr" style="background:#dc2626;">🫀 CARDIAC ARREST</div><div class="emg-list">
+  <details class="emg-section" open><summary class="emg-sec-hdr" style="background:#dc2626;">🫀 CARDIAC ARREST<span class="emg-caret">▾</span></summary><div class="emg-list">
     <div class="emg-item"><div class="emg-left"><span class="emg-name">Epinephrine <span class="emg-route">IV</span></span><span class="emg-sub">3–5분마다 반복</span></div><span class="emg-dose">1 mg</span></div>
     <div class="emg-item"><div class="emg-left"><span class="emg-name">Amiodarone <span class="emg-route">IV</span></span><span class="emg-sub">3번째 shock 후. 5번째 후 150mg 추가</span></div><span class="emg-dose">300 mg</span></div>
     <div class="emg-item"><div class="emg-left"><span class="emg-name">MgSO₄ <span class="emg-route">IV</span></span><span class="emg-sub">Torsades de pointes / 저마그네슘</span></div><span class="emg-dose">2 g (8 mmol)</span></div>
     <div class="emg-item"><div class="emg-left"><span class="emg-name">Calcium Chloride 10% <span class="emg-route">IV</span></span><span class="emg-sub">고칼륨혈증 / CCB 과량</span></div><span class="emg-dose">10 mL</span></div>
     <div class="emg-item"><div class="emg-left"><span class="emg-name">NaHCO₃ 8.4% <span class="emg-route">IV</span></span><span class="emg-sub">고칼륨혈증 / TCA 과량</span></div><span class="emg-dose">50 mL</span></div>
-  </div></div>
+  </div></details>
 
-  <div class="emg-section"><div class="emg-sec-hdr" style="background:#ea580c;">⚡ ANAPHYLAXIS</div><div class="emg-list">
+  <details class="emg-section"><summary class="emg-sec-hdr" style="background:#ea580c;">⚡ ANAPHYLAXIS<span class="emg-caret">▾</span></summary><div class="emg-list">
     <div class="emg-item"><div class="emg-left"><span class="emg-name">Epinephrine IM <span class="emg-route">IM</span></span><span class="emg-sub">필요 시 5분마다 반복</span></div><span class="emg-dose">500 mcg (1:1000 0.5mL)</span></div>
     <div class="emg-item"><div class="emg-left"><span class="emg-name">Epinephrine IV <span class="emg-route">IV</span></span><span class="emg-sub">심정지 임박 시, 소량 적정</span></div><span class="emg-dose">50 mcg bolus</span></div>
     <div class="emg-item"><div class="emg-left"><span class="emg-name">Hydrocortisone <span class="emg-route">IV</span></span><span class="emg-sub"></span></div><span class="emg-dose">200 mg</span></div>
     <div class="emg-item"><div class="emg-left"><span class="emg-name">Chlorphenamine <span class="emg-route">IV</span></span><span class="emg-sub"></span></div><span class="emg-dose">10 mg</span></div>
     <div class="emg-item"><div class="emg-left"><span class="emg-name">IV Fluids <span class="emg-route">IV</span></span><span class="emg-sub">급속 bolus</span></div><span class="emg-dose">500–1000 mL 결정질</span></div>
-  </div></div>
+  </div></details>
 
-  <div class="emg-section"><div class="emg-sec-hdr" style="background:#ca8a04;">⏱ SEVERE BRADYCARDIA</div><div class="emg-list">
+  <details class="emg-section"><summary class="emg-sec-hdr" style="background:#ca8a04;">⏱ SEVERE BRADYCARDIA<span class="emg-caret">▾</span></summary><div class="emg-list">
     <div class="emg-item"><div class="emg-left"><span class="emg-name">Atropine <span class="emg-route">IV</span></span><span class="emg-sub">q3–5min 반복, 최대 3mg (2020 AHA)</span></div><span class="emg-dose">1 mg</span></div>
     <div class="emg-item"><div class="emg-left"><span class="emg-name">Epinephrine infusion <span class="emg-route">IV</span></span><span class="emg-sub"></span></div><span class="emg-dose">2–10 mcg/min</span></div>
     <div class="emg-item"><div class="emg-left"><span class="emg-name">Isoprenaline <span class="emg-route">IV</span></span><span class="emg-sub">심박수 맞춰 적정</span></div><span class="emg-dose">5 mcg/min</span></div>
-  </div></div>
+  </div></details>
 
-  <div class="emg-section"><div class="emg-sec-hdr" style="background:#16a34a;">🧪 HYPERKALAEMIA</div><div class="emg-list">
+  <details class="emg-section"><summary class="emg-sec-hdr" style="background:#16a34a;">🧪 HYPERKALAEMIA<span class="emg-caret">▾</span></summary><div class="emg-list">
     <div class="emg-item"><div class="emg-left"><span class="emg-name">Calcium Chloride 10% <span class="emg-route">IV</span></span><span class="emg-sub">심장보호. 5–10분에 걸쳐</span></div><span class="emg-dose">10 mL</span></div>
     <div class="emg-item"><div class="emg-left"><span class="emg-name">Insulin + D50W <span class="emg-route">IV</span></span><span class="emg-sub">D50W 50mL와 함께</span></div><span class="emg-dose">Insulin 10 u + D50W 50mL</span></div>
     <div class="emg-item"><div class="emg-left"><span class="emg-name">Salbutamol <span class="emg-route">Neb</span></span><span class="emg-sub"></span></div><span class="emg-dose">10–20 mg</span></div>
     <div class="emg-item"><div class="emg-left"><span class="emg-name">NaHCO₃ 8.4% <span class="emg-route">IV</span></span><span class="emg-sub">대사산증 동반 시</span></div><span class="emg-dose">50 mL</span></div>
-  </div></div>
+  </div></details>
 
-  <div class="emg-section"><div class="emg-sec-hdr" style="background:#7c3aed;">⚠️ HYPERTENSIVE CRISIS</div><div class="emg-list">
+  <details class="emg-section"><summary class="emg-sec-hdr" style="background:#7c3aed;">⚠️ HYPERTENSIVE CRISIS<span class="emg-caret">▾</span></summary><div class="emg-list">
     <div class="emg-item"><div class="emg-left"><span class="emg-name">Labetalol <span class="emg-route">IV</span></span><span class="emg-sub">2분에 걸쳐. 10분마다 반복 Max 200mg</span></div><span class="emg-dose">20 mg bolus</span></div>
     <div class="emg-item"><div class="emg-left"><span class="emg-name">Nitroglycerin <span class="emg-route">IV</span></span><span class="emg-sub">5 mcg/min 시작 → 증량</span></div><span class="emg-dose">5–200 mcg/min</span></div>
     <div class="emg-item"><div class="emg-left"><span class="emg-name">Nicardipine <span class="emg-route">IV</span></span><span class="emg-sub">5 mg/hr 시작 → 최대 15 mg/hr</span></div><span class="emg-dose">5–15 mg/hr</span></div>
     <div class="emg-item"><div class="emg-left"><span class="emg-name">Hydralazine <span class="emg-route">IV</span></span><span class="emg-sub">20분에 걸쳐</span></div><span class="emg-dose">5–10 mg</span></div>
-  </div></div>
+  </div></details>
 
-  <div class="emg-section"><div class="emg-sec-hdr" style="background:#0891b2;">💧 ACUTE PULMONARY OEDEMA</div><div class="emg-list">
+  <details class="emg-section"><summary class="emg-sec-hdr" style="background:#0891b2;">💧 ACUTE PULMONARY OEDEMA<span class="emg-caret">▾</span></summary><div class="emg-list">
     <div class="emg-item"><div class="emg-left"><span class="emg-name">Furosemide <span class="emg-route">IV</span></span><span class="emg-sub">bolus</span></div><span class="emg-dose">40–80 mg</span></div>
     <div class="emg-item"><div class="emg-left"><span class="emg-name">Nitroglycerin <span class="emg-route">IV/SL</span></span><span class="emg-sub">SBP ≥ 90 mmHg 확인 후</span></div><span class="emg-dose">5–10 mcg/min</span></div>
     <div class="emg-item"><div class="emg-left"><span class="emg-name">Morphine <span class="emg-route">IV</span></span><span class="emg-sub">호흡억제 주의</span></div><span class="emg-dose">2–4 mg</span></div>
-  </div></div>
+  </div></details>
 
-  <div class="emg-section"><div class="emg-sec-hdr" style="background:#6d28d9;">⚡ STATUS EPILEPTICUS</div><div class="emg-list">
+  <details class="emg-section"><summary class="emg-sec-hdr" style="background:#6d28d9;">⚡ STATUS EPILEPTICUS<span class="emg-caret">▾</span></summary><div class="emg-list">
     <div class="emg-item"><div class="emg-left"><span class="emg-name">Lorazepam <span class="emg-route">IV</span></span><span class="emg-sub">2분에 걸쳐. 필요 시 반복</span></div><span class="emg-dose">4 mg</span></div>
     <div class="emg-item"><div class="emg-left"><span class="emg-name">Midazolam <span class="emg-route">IV/IM</span></span><span class="emg-sub">IV line 없을 시 IM 10mg</span></div><span class="emg-dose">5–10 mg</span></div>
     <div class="emg-item"><div class="emg-left"><span class="emg-name">Levetiracetam <span class="emg-route">IV</span></span><span class="emg-sub">15분 infusion</span></div><span class="emg-dose">1000–3000 mg</span></div>
     <div class="emg-item"><div class="emg-left"><span class="emg-name">Phenytoin <span class="emg-route">IV</span></span><span class="emg-sub">50mg/min 이하. ECG 모니터링</span></div><span class="emg-dose">15–20 mg/kg</span></div>
-  </div></div>
+  </div></details>
 
-  <div class="emg-section"><div class="emg-sec-hdr" style="background:#0d9488;">💉 OPIOID OVERDOSE</div><div class="emg-list">
+  <details class="emg-section"><summary class="emg-sec-hdr" style="background:#0d9488;">💉 OPIOID OVERDOSE<span class="emg-caret">▾</span></summary><div class="emg-list">
     <div class="emg-item"><div class="emg-left"><span class="emg-name">Naloxone <span class="emg-route">IV</span></span><span class="emg-sub">2–3분마다 반복. ICU: 0.04mg부터</span></div><span class="emg-dose">0.04–0.4 mg</span></div>
     <div class="emg-item"><div class="emg-left"><span class="emg-name">Naloxone infusion <span class="emg-route">IV</span></span><span class="emg-sub">bolus 2/3 시간당</span></div><span class="emg-dose">0.25–0.5 mg/hr</span></div>
-  </div></div>
+  </div></details>
 
-  <div class="emg-section"><div class="emg-sec-hdr" style="background:#b45309;">🫁 ACUTE SEVERE ASTHMA</div><div class="emg-list">
+  <details class="emg-section"><summary class="emg-sec-hdr" style="background:#b45309;">🫁 ACUTE SEVERE ASTHMA<span class="emg-caret">▾</span></summary><div class="emg-list">
     <div class="emg-item"><div class="emg-left"><span class="emg-name">Salbutamol <span class="emg-route">Neb</span></span><span class="emg-sub">필요 시 반복 또는 연속 neb</span></div><span class="emg-dose">5 mg</span></div>
     <div class="emg-item"><div class="emg-left"><span class="emg-name">Ipratropium <span class="emg-route">Neb</span></span><span class="emg-sub">Salbutamol과 병용</span></div><span class="emg-dose">0.5 mg</span></div>
     <div class="emg-item"><div class="emg-left"><span class="emg-name">Hydrocortisone <span class="emg-route">IV</span></span><span class="emg-sub"></span></div><span class="emg-dose">100–200 mg</span></div>
     <div class="emg-item"><div class="emg-left"><span class="emg-name">MgSO₄ <span class="emg-route">IV</span></span><span class="emg-sub">20분에 걸쳐 천천히</span></div><span class="emg-dose">2 g</span></div>
     <div class="emg-item"><div class="emg-left"><span class="emg-name">Epinephrine IM <span class="emg-route">IM</span></span><span class="emg-sub">생명 위협 시</span></div><span class="emg-dose">500 mcg (1:1000 0.5mL)</span></div>
-  </div></div>
+  </div></details>
 
 </div>
 
@@ -2116,6 +2128,7 @@ if('serviceWorker' in navigator){
       <span class="fset-label">듀티</span>
       <button class="fset-btn active" id="duty-btn-12" type="button" onclick="setDutyMode('12hr',this)">12hr (2교대)</button>
       <button class="fset-btn" id="duty-btn-8" type="button" onclick="setDutyMode('8hr',this)">8hr (3교대)</button>
+      <button class="fset-btn" id="duty-btn-24" type="button" onclick="setDutyMode('24hr',this)">24hr (하루)</button>
     </div>
     <div class="fset-group">
       <span class="fset-label">Output</span>
@@ -2161,8 +2174,8 @@ if('serviceWorker' in navigator){
   <div class="fluid-top-grid">
 
     <!-- 수액 계획 패널 -->
-    <div class="fluid-card" id="fluid-plan-card">
-      <div class="fluid-card-hdr">📋 수액 계획 <span style="font-size:11px;color:var(--muted);font-weight:400;">목표 Balance 기반</span></div>
+    <details class="fluid-card fluid-card-acc" id="fluid-plan-card">
+      <summary class="fluid-card-hdr">📋 수액 계획 <span style="font-size:11px;color:var(--muted);font-weight:400;">목표 Balance 기반</span><span class="fluid-caret">▾</span></summary>
 
       <!-- 약물 carrier 자동 -->
       <div class="fluid-row-hdr">약물 carrier (자동)</div>
@@ -2196,11 +2209,11 @@ if('serviceWorker' in navigator){
         <div class="fluid-result-row" style="margin-top:8px;border-top:1px solid var(--border);padding-top:8px;"><span>💡 권고 유지수액</span><span id="plan-suggest" class="fluid-mono" style="color:var(--accent);font-weight:800;">— mL/hr</span></div>
         <div class="fluid-result-row" style="margin-top:4px;"><span style="font-size:11px;color:var(--muted);">📐 하루 최소 필요량 (참고)</span><span id="plan-maint" class="fluid-mono" style="font-size:11px;color:var(--muted);">—</span></div>
       </div>
-    </div>
+    </details>
 
     <!-- 분포 계산 패널 -->
-    <div class="fluid-card" id="fluid-dist-card">
-      <div class="fluid-card-hdr">🧮 수액 분포 계산 <span style="font-size:11px;color:var(--muted);font-weight:400;">이론적 예측</span></div>
+    <details class="fluid-card fluid-card-acc" id="fluid-dist-card">
+      <summary class="fluid-card-hdr">🧮 수액 분포 계산 <span style="font-size:11px;color:var(--muted);font-weight:400;">이론적 예측</span><span class="fluid-caret">▾</span></summary>
       <div id="fluid-dist-list">
         <div style="overflow-x:auto;">
           <table class="dist-tbl">
@@ -2217,21 +2230,15 @@ if('serviceWorker' in navigator){
           <div id="dist-compartment-ref" style="margin-top:12px;"></div>
         </div><!-- /fluid-dist-list overflow -->
       </div><!-- /fluid-dist-list -->
-    </div><!-- /fluid-dist-card -->
+    </details><!-- /fluid-dist-card -->
 
   <!-- ===== v3.11 영양 요구량 ===== -->
-  <div class="calc-card nut-card">
-    <div class="calc-title">🍽 영양 요구량 <span class="calc-subtitle">열량·단백 · ASPEN/ESPEN</span></div>
-    <div class="elyte-inputs">
-      <div class="elyte-field"><label>신장</label>
-        <div class="elyte-inp-wrap"><input type="number" id="nut-ht" value="170" min="100" max="220" step="1" inputmode="decimal" oninput="calcNutrition()"><span>cm</span></div></div>
-      <div class="elyte-field"><label>성별</label>
-        <select id="nut-sex" onchange="calcNutrition()"><option value="male">남성</option><option value="female">여성</option></select></div>
-    </div>
-    <div class="elyte-note-wt">체중 <b id="nut-wt-disp">60</b> kg (상단 환자 정보 연동)</div>
+  <details class="calc-card nut-card fluid-card-acc">
+    <summary class="calc-title">🍽 영양 요구량 <span class="calc-subtitle">열량·단백 · ASPEN/ESPEN</span><span class="fluid-caret">▾</span></summary>
+    <div class="elyte-note-wt">체중 <b id="nut-wt-disp">60</b> kg · 신장 <b id="nut-ht-disp">—</b> cm (<span id="nut-sex-disp">남성</span>) <span style="color:var(--muted2);">— Vent 탭 신장 연동</span></div>
     <div id="nut-out"></div>
     <div class="elyte-ref"><b>열량:</b> 12–25 kcal/kg/일(ASPEN 2022), 급성기 ≤70% · <b>단백:</b> 1.2–2.0 g/kg(ASPEN), 비만 BMI30–40 2.0·>40 2.5 g/kg IBW · BMI≥30은 IBW 기준 · 출처: ASPEN 2022, ESPEN 2023, EMCrit IBCC</div>
-  </div>
+  </details>
 
   </div><!-- /tab-fluid -->
 
@@ -2344,6 +2351,11 @@ var bloodRowCount   = 0;
 var dutyCardCount   = 0;
 
 // ── 설정 함수 ──
+function dutyHours(){
+  if(fluidDutyMode==='24hr') return 24;
+  if(fluidDutyMode==='8hr') return 8;
+  return 12;
+}
 function setDutyMode(mode, btn){
   fluidDutyMode = mode;
   document.querySelectorAll('[id^="duty-btn-"]').forEach(function(b){b.classList.remove('active');});
@@ -2520,11 +2532,11 @@ function delRow(id){
 function addDutyCard(){
   dutyCardCount++;
   var dc = dutyCardCount;
-  var dutyHr = fluidDutyMode === '12hr' ? 12 : 8;
+  var dutyHr = dutyHours();
   var startHr = ((dc-1) * dutyHr) % 24;
   var endHr   = startHr + dutyHr;
   var fmtHr = function(h){ return String(h%24).padStart(2,'0')+':00'; };
-  var title = dc+'교대 ('+fmtHr(startHr)+'–'+fmtHr(endHr)+')';
+  var title = (fluidDutyMode==='24hr') ? (dc===1?'하루 전체 (24h)':dc+'일째 (24h)') : (dc+'교대 ('+fmtHr(startHr)+'–'+fmtHr(endHr)+')');
 
   var vpData = calcVasopressorInput(dutyHr);
   var insensData = calcInsensibleLoss(dutyHr);
@@ -2607,7 +2619,7 @@ function calcDutyBalance(dc){
   var g = function(id){ return parseFloat((document.getElementById(id)||{}).value)||0; };
   var t = function(id){ return parseFloat(((document.getElementById(id)||{}).textContent||'').replace(/[^0-9.-]/g,''))||0; };
 
-  var dutyHr = fluidDutyMode==='12hr' ? 12 : 8;
+  var dutyHr = dutyHours();
   var vp     = t('dc'+dc+'-vp');
   var fluid  = g('dc'+dc+'-fluid');
   var blood  = g('dc'+dc+'-blood');
@@ -2661,7 +2673,7 @@ function updateFluidCalc(){
   if(!document.getElementById('tab-fluid') ||
      document.getElementById('tab-fluid').style.display==='none') return;
 
-  var dutyHr = fluidDutyMode==='12hr' ? 12 : 8;
+  var dutyHr = dutyHours();
 
   // 1. 승압제 자동
   var vpData = calcVasopressorInput(dutyHr);
@@ -4880,8 +4892,8 @@ function cIBW(){
 
     var diffSign = diff >= 0 ? '+' : '';
     var statusHtml = isObese
-      ? '<span style="background:var(--orange-lt);color:var(--orange);border:1px solid var(--orange-bg);border-radius:6px;padding:2px 9px;font-size:11px;font-weight:700;">⚠️ 비만 — IBW 기준 사용 필수</span>'
-      : '<span style="background:var(--green-lt);color:var(--green);border:1px solid #bbf7d0;border-radius:6px;padding:2px 9px;font-size:11px;font-weight:700;">✓ 정상 범위</span>';
+      ? '<span style="background:var(--orange-lt);color:var(--orange);border:1px solid var(--orange-bg);border-radius:6px;padding:2px 8px;font-size:10px;font-weight:700;white-space:nowrap;">⚠️ 비만</span>'
+      : '<span style="background:var(--green-lt);color:var(--green);border:1px solid #bbf7d0;border-radius:6px;padding:2px 8px;font-size:10px;font-weight:700;white-space:nowrap;">✓ 정상</span>';
 
     cmpEl.innerHTML =
       '<div style="display:flex;align-items:baseline;gap:8px;margin-bottom:6px;">'
@@ -4892,8 +4904,12 @@ function cIBW(){
       +'<span style="font-size:13px;color:var(--muted);">IBW</span>'
       +'<span style="font-family:var(--mono);font-size:22px;font-weight:700;color:var(--accent);">'+ibwRound+' kg</span>'
       +'<span style="font-size:13px;color:var(--muted);">('+diffSign+diff.toFixed(1)+' kg, '+diffSign+pct+'%)</span>'
-      +'</div>'
-      + statusHtml;
+      +'</div>';
+    var badgeEl=document.getElementById('ibw-compare-badge');
+    if(badgeEl) badgeEl.innerHTML = statusHtml;
+  } else {
+    var badgeEl2=document.getElementById('ibw-compare-badge');
+    if(badgeEl2) badgeEl2.innerHTML = '';
   }
 
   // Tidal Volume 테이블
@@ -4960,6 +4976,8 @@ function cIBW(){
 
   // IBW(신장·성별) 변경 → vent 제안의 TV/kg도 동기화
   if(typeof calcVentSuggest==='function'){ try{ calcVentSuggest(); }catch(e){} }
+  // 신장은 영양 요구량 계산과도 공유 — 동기화
+  if(typeof calcNutrition==='function'){ try{ calcNutrition(); }catch(e){} }
 }
 function switchTab(name,btn){
   var tabs=document.querySelectorAll('.tab');
@@ -5993,11 +6011,15 @@ var NUTRITION = {
 
 function calcNutrition(){
   var wt=bwt();
-  var ht=parseFloat((document.getElementById('nut-ht')||{}).value)||0;
-  var sex=(document.getElementById('nut-sex')||{}).value||'male';
+  // 신장·성별은 Vent 탭(IBW)의 값을 단일 출처로 사용 — 이중입력 제거
+  var ht=parseFloat((document.getElementById('ibw-height')||{}).value)||0;
+  var sex=(typeof ibwSex!=='undefined'?ibwSex:((document.getElementById('ibwSex')||{}).value||'male'));
   var out=document.getElementById('nut-out');
   if(!out) return;
-  if(!ht || ht<100){ out.innerHTML='<div class="nut-hint">신장을 입력하면 BMI·체중 보정과 함께 계산됩니다.</div>'; return; }
+  // 영양 카드의 신장 표시 갱신
+  var htDisp=document.getElementById('nut-ht-disp'); if(htDisp) htDisp.textContent = ht? ht : '—';
+  var sexDisp=document.getElementById('nut-sex-disp'); if(sexDisp) sexDisp.textContent = (sex==='female'?'여성':'남성');
+  if(!ht || ht<100){ out.innerHTML='<div class="nut-hint">Vent 탭에서 신장을 입력하면 BMI·체중 보정과 함께 계산됩니다.</div>'; return; }
 
   var bmi=wt/Math.pow(ht/100,2);
   var ibw=calcIBW(ht,sex);
