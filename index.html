@@ -1634,40 +1634,39 @@ if('serviceWorker' in navigator){
   <div class="ibw-layout" style="display:grid;grid-template-columns:1.4fr 1fr;gap:10px;margin-bottom:14px;">
 
     <!-- 좌: IBW 입력 + 결과 -->
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:14px 16px;box-shadow:var(--sh);min-width:0;">
-      <div style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;">이상체중 계산 (Devine)</div>
-      <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:10px;">
-        <!-- 키 -->
-        <div style="display:flex;flex-direction:column;gap:4px;">
-          <div class="f-label">📏 키</div>
-          <div class="inp-wrap">
-            <input type="number" id="ibw-height" value="170" min="100" max="220" step="1"
-              inputmode="decimal" oninput="cIBW()"
-              style="font-size:18px;font-weight:700;width:62px;padding:6px 8px;text-align:right;background:none;border:none;outline:none;font-family:var(--mono);color:var(--text);">
-            <span class="u-label">cm</span>
-          </div>
-        </div>
-        <!-- 성별 -->
-        <div style="display:flex;flex-direction:column;gap:4px;">
-          <div class="f-label">⚧ 성별</div>
-          <div style="display:flex;gap:5px;">
-            <button class="ftab active" type="button" id="ibw-male" onclick="setSex('male')" style="color:var(--accent);border-color:var(--accent);padding:5px 10px;">남</button>
-            <button class="ftab" type="button" id="ibw-female" onclick="setSex('female')" style="padding:5px 10px;">여</button>
-          </div>
-        </div>
-        <!-- IBW 결과 (인라인) -->
-        <div style="display:flex;flex-direction:column;gap:2px;margin-left:auto;">
-          <div class="f-label">이상체중</div>
-          <div style="display:flex;align-items:baseline;gap:4px;">
-            <span id="ibw-result" style="font-family:var(--mono);font-size:26px;font-weight:800;color:var(--accent);line-height:1;letter-spacing:-1px;">—</span>
-            <span style="font-size:12px;color:var(--muted);font-weight:600;">kg</span>
-          </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:12px 14px;box-shadow:var(--sh);min-width:0;">
+      <div style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;">이상체중 계산 (Devine)</div>
+      <!-- 키 라벨 + 성별 버튼 한 줄 -->
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;">
+        <span class="f-label" style="margin:0;white-space:nowrap;">📏 키·성별</span>
+        <div style="display:flex;gap:4px;">
+          <button class="ftab active" type="button" id="ibw-male" onclick="setSex('male')" style="color:var(--accent);border-color:var(--accent);padding:3px 11px;font-size:12px;">남</button>
+          <button class="ftab" type="button" id="ibw-female" onclick="setSex('female')" style="padding:3px 11px;font-size:12px;">여</button>
         </div>
       </div>
       <!-- 슬라이더 -->
       <input type="range" id="ibw-height-sl" min="140" max="200" step="1" value="170"
-        style="accent-color:var(--accent);width:100%;"
+        style="accent-color:var(--accent);width:100%;margin:2px 0 8px;"
         oninput="syncInput('ibw-height-sl','ibw-height',cIBW)">
+      <!-- 슬라이더 하단: 키(좌) · IBW(우) 나란히 -->
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:10px;">
+        <div style="display:flex;flex-direction:column;gap:2px;">
+          <div class="f-label" style="margin:0;">키</div>
+          <div class="inp-wrap" style="padding:2px 4px;">
+            <input type="number" id="ibw-height" value="170" min="100" max="220" step="1"
+              inputmode="decimal" oninput="cIBW()"
+              style="font-size:19px;font-weight:700;width:58px;padding:2px 2px;text-align:right;background:none;border:none;outline:none;font-family:var(--mono);color:var(--text);">
+            <span class="u-label">cm</span>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:2px;align-items:flex-end;">
+          <div class="f-label" style="margin:0;">이상체중</div>
+          <div style="display:flex;align-items:baseline;gap:3px;">
+            <span id="ibw-result" style="font-family:var(--mono);font-size:27px;font-weight:800;color:var(--accent);line-height:1;letter-spacing:-1px;">—</span>
+            <span style="font-size:12px;color:var(--muted);font-weight:600;">kg</span>
+          </div>
+        </div>
+      </div>
       <div id="ibw-formula" style="font-size:10px;color:var(--muted);margin-top:6px;"></div>
     </div>
 
@@ -4896,15 +4895,15 @@ function cIBW(){
       : '<span style="background:var(--green-lt);color:var(--green);border:1px solid #bbf7d0;border-radius:6px;padding:2px 8px;font-size:10px;font-weight:700;white-space:nowrap;">✓ 정상</span>';
 
     cmpEl.innerHTML =
-      '<div style="display:flex;align-items:baseline;gap:8px;margin-bottom:6px;">'
-      +'<span style="font-size:13px;color:var(--muted);">실제체중</span>'
-      +'<span style="font-family:var(--mono);font-size:22px;font-weight:700;color:var(--text);">'+tbw+' kg</span>'
+      '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:6px;margin-bottom:6px;">'
+      +'<span style="font-size:12px;color:var(--muted);">실제체중</span>'
+      +'<span style="font-family:var(--mono);font-size:19px;font-weight:700;color:var(--text);white-space:nowrap;">'+tbw+' kg</span>'
       +'</div>'
-      +'<div style="display:flex;align-items:baseline;gap:8px;margin-bottom:8px;">'
-      +'<span style="font-size:13px;color:var(--muted);">IBW</span>'
-      +'<span style="font-family:var(--mono);font-size:22px;font-weight:700;color:var(--accent);">'+ibwRound+' kg</span>'
-      +'<span style="font-size:13px;color:var(--muted);">('+diffSign+diff.toFixed(1)+' kg, '+diffSign+pct+'%)</span>'
-      +'</div>';
+      +'<div style="display:flex;align-items:baseline;justify-content:space-between;gap:6px;">'
+      +'<span style="font-size:12px;color:var(--muted);">IBW</span>'
+      +'<span style="font-family:var(--mono);font-size:19px;font-weight:700;color:var(--accent);white-space:nowrap;">'+ibwRound+' kg</span>'
+      +'</div>'
+      +'<div style="text-align:right;font-size:11px;color:var(--muted);margin-top:3px;white-space:nowrap;">('+diffSign+diff.toFixed(1)+' kg · '+diffSign+pct+'%)</div>';
     var badgeEl=document.getElementById('ibw-compare-badge');
     if(badgeEl) badgeEl.innerHTML = statusHtml;
   } else {
