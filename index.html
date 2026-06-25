@@ -3046,7 +3046,7 @@ function toggleCustomMix(drugId, btn){
     'epi':'cEpi','dobu':'cDobu','dex':'cDex','midaz':'cMidaz',
     'ultiva':'cUltiva','bec':'cBec','lasix':'cLasix','prop':'cProp',
     'fent':'cFent','esmo':'cEsmo',
-    'milri':'cMilri','dilti':'cDilti','octreo':'cOctreo','hep':'cHep','labet':'cLabet','ins':'cIns'
+    'milri':'cMilri','dilti':'cDilti','octreo':'cOctreo','hep':'cHep','labet':'cLabet','ins':'cIns','keppra':'cKeppra'
   };
   var fn = window[calcMap[drugId]];
   if(fn) fn();
@@ -3714,7 +3714,7 @@ var DRUGS = [
   `
 },
 {
-  id:'c-lasix', tab:'sd',
+  id:'c-lasix', tab:'ot', section:'other',
   mapId:'drug:furosemide',
   color:'#0891b2',
   name:'Furosemide (Lasix)',
@@ -4120,6 +4120,44 @@ var DRUGS = [
 
     <div class="ban-info"><span class="ban-icon">💡</span><span><b>일반</b>: 로딩 60 U/kg(max 5000) → 유지 12 U/kg/hr(max 1000 U/hr) · <b>STEMI</b>: 로딩 80 U/kg → 유지 18 U/kg/hr. 적응증·기관 프로토콜에 따라 상이하므로 반드시 확인.</span></div>
   `
+},
+{
+  id:'c-keppra', tab:'ot', section:'other',
+  mapId:'drug:levetiracetam',
+  color:'#7c3aed',
+  name:'Levetiracetam (Keppra)',
+  nameKr:'케프라 · 항경련',
+  sub:'로딩 60 mg/kg (max 4.5g) · 유지 500–1000mg q12h',
+  badges:[['bd-purple','⚡ 상태간질']],
+  dose:{ default:60, unit:'mg/kg', min:20, max:60, conc:null, concUnit:null, mode:'load' },
+  body:`
+    <div class="ban-info" style="margin-bottom:8px;"><span class="ban-icon">⚡</span><span><b>지속주입 약물 아님</b> — 로딩 1회 후 q12h 간헐 투여. 아래는 로딩 용량 계산.</span></div>
+    <!-- 로딩 용량 mg/kg 선택 -->
+    <div class="slider-wrap"><input type="range" id="keppra-sl" min="20" max="60" step="5" style="accent-color:#7c3aed;" oninput="syncInput('keppra-sl','keppra-d',cKeppra)"></div>
+    <div class="titration-row">
+      <button class="tit-btn" type="button" onclick="titrate('keppra-d','keppra-sl',-5,cKeppra)">−</button>
+      <div class="tit-val-wrap"><input type="number" id="keppra-d" value="60" min="20" max="60" step="5" inputmode="decimal" oninput="syncSlider('keppra-d','keppra-sl');cKeppra()"><span class="tit-unit">mg/kg</span></div>
+      <button class="tit-btn" type="button" onclick="titrate('keppra-d','keppra-sl',5,cKeppra)">＋</button>
+      <span class="tit-step">± 5</span>
+      <div class="qbtns"><button class="qbtn" type="button" onclick="setDSlider('keppra-d','keppra-sl',40,cKeppra)">40</button><button class="qbtn" type="button" onclick="setDSlider('keppra-d','keppra-sl',60,cKeppra)">60</button></div>
+    </div>
+    <div id="keppra-res" class="res-big empty"><span class="res-big-num empty">체중 입력 후 계산</span></div>
+    <!-- 유지 요법 안내 -->
+    <div class="hep-nomo-wrap">
+      <div class="hep-nomo-title">📋 유지 요법 (로딩 12시간 후 시작)</div>
+      <table class="hep-nomo">
+        <thead><tr><th>상황</th><th>유지 용량</th></tr></thead>
+        <tbody>
+          <tr><td>일반 ICU</td><td>500–1000 mg IV q12h</td></tr>
+          <tr><td>중환자(빠른 제거)</td><td>750–1000 mg q12h (≈25 mg/kg/일)</td></tr>
+          <tr class="nomo-low"><td>CrCl 30–50</td><td>250–750 mg q12h</td></tr>
+          <tr class="nomo-low"><td>CrCl &lt;30</td><td>250–500 mg q12h</td></tr>
+        </tbody>
+      </table>
+      <div class="hep-nomo-note">정맥 주입: <b>100 mg/min 이하</b> (예: 1500mg → ≥15분). 로딩 ≥40mg/kg는 삽관 위험↑ 보고. 신기능 따라 감량.</div>
+    </div>
+    <div class="ban-info"><span class="ban-icon">💡</span><span>상태간질 2차 약제(ESETT). 로딩 <b>60 mg/kg, max 4.5g</b>, 10분 주입(>69kg는 4.5g 고정). 심장 모니터 불필요·약물상호작용 적음. 적응증·기관 프로토콜 확인.</span></div>
+  `
 }
 ];
 
@@ -4298,6 +4336,22 @@ function cHep(){
   var d=parseFloat(document.getElementById('hep-d').value)||m.default;
   renderBig('hep-res',d*bwt()/getConc('hep',m.conc,m.concUnit),d,m.min,m.max);
   updHepLoad();
+}
+function cKeppra(){
+  var el=document.getElementById('keppra-res'); if(!el) return;
+  var mgkg=parseFloat(document.getElementById('keppra-d').value)||60;
+  var wt=bwt();
+  var raw=mgkg*wt;
+  var capped=Math.min(raw, 4500);          // max 4.5g
+  var isCap=raw>4500;
+  // 주입시간: 100 mg/min 이하 → 분 = mg/100, 최소 표기 10분(상태간질 권장)
+  var infMin=Math.max(Math.ceil(capped/100), 10);
+  el.className='res-big';
+  el.innerHTML='<span class="res-big-num" style="color:#7c3aed;">'+Math.round(capped)+'</span>'
+    +'<span class="res-big-unit">mg 로딩</span>'
+    +'<div class="res-big-sub">'+mgkg+' mg/kg × '+wt+'kg'
+    +(isCap?' → <b>4.5g 상한 적용</b>':'')
+    +' · 주입 ≥'+infMin+'분 (100 mg/min 이하)</div>';
 }
 function cLabet(){
   var m=doseMeta('c-labet');
@@ -6397,7 +6451,7 @@ function updateAll(){
   cNorepi();cEpi();cDobu();cMilri();cDopa();cEsmo();cPhe();cDilti();
   cDex();cMidaz();cUltiva();cEtom();cHalo();cBec();cLasix();cLabet();
   cLido();cNalox();
-  cProp();cFent();cRoc();cSug();cIns();cOctreo();cHep();
+  cProp();cFent();cRoc();cSug();cIns();cOctreo();cHep();cKeppra();
   // 체중 의존 모듈도 갱신
   if(typeof updateFluidCalc==='function') updateFluidCalc();
   if(typeof calcNaCorrection==='function') calcNaCorrection();
