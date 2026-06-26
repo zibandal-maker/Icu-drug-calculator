@@ -519,13 +519,12 @@ input[type=range]::-moz-range-thumb{
 .oc-name{font-size:13px;font-weight:700;color:var(--text);}
 .oc-conc{font-size:11px;color:var(--muted);margin-top:1px;}
 .oc-body{font-size:12px;color:var(--text2);line-height:1.7;}
-.o-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;margin-bottom:14px;}
-/* 이외·심혈관은 그리드라 칸이 좁음 → 헤더 세로 배치(약품명/배지 겹침 방지) */
-.o-grid .dc-btn{flex-direction:column;align-items:stretch;gap:4px;}
-.o-grid .dc-r{justify-content:flex-start;max-width:100%;margin-left:14px;}
-.o-grid .dc-name{white-space:normal;}
-.o-grid .oc-hdr-btn{flex-wrap:wrap;}
-.o-grid .oc-tag{flex-basis:100%;margin-left:31px;}
+.o-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:10px;margin-bottom:14px;}
+/* 이외·심혈관 그리드: dc·oc 헤더 구조 통일 (약품명 줄, 배지 아래 줄) */
+.o-grid .dc-btn{flex-wrap:wrap;}
+.o-grid .dc-txt{flex-direction:column;align-items:flex-start;gap:1px;}
+.o-grid .dc-name{white-space:nowrap;}
+.o-grid .dc-r{flex-basis:100%;justify-content:flex-start;margin-left:14px;margin-top:2px;max-width:100%;}
 .ref-tbl{width:100%;border-collapse:collapse;font-size:12px;margin-top:4px;}
 .ref-tbl th{padding:5px 8px;border-bottom:1.5px solid var(--border);color:var(--muted);font-weight:700;text-align:left;background:var(--surface2);}
 .ref-tbl td{padding:5px 8px;border-bottom:.5px solid var(--border);}
