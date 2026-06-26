@@ -210,6 +210,9 @@ input{-webkit-appearance:none;appearance:none;font-size:16px;} /* 16px 미만이
 .bic-calc-or{font-size:10px;color:var(--muted2);padding:0 2px;}
 .bic-bd-result{font-size:12px;color:var(--muted);background:var(--surface2);border-radius:8px;padding:9px 11px;margin-top:6px;line-height:1.5;}
 .bic-bd-result.has{background:var(--cyan-lt,#e0f2fe);color:var(--text);}
+.bic-mix-modes{display:flex;gap:4px;margin-bottom:6px;}
+.bic-mix-btn{flex:1;padding:5px 4px;border:1px solid var(--border);background:var(--surface2);border-radius:7px;font-size:11px;font-weight:600;color:var(--muted);cursor:pointer;font-family:var(--sans);transition:all .12s;}
+.bic-mix-btn.active{background:var(--cyan-lt,#e0f2fe);border-color:var(--cyan,#0891b2);color:var(--cyan,#0891b2);font-weight:700;}
 .bd-teal{background:var(--teal-lt);color:var(--teal);border:1px solid var(--teal-bg);}
 .bd-yellow{background:var(--yellow-lt);color:var(--yellow);border:1px solid #fde68a;}
 .bd-gray{background:#f3f4f6;color:#4b5563;border:1px solid #e5e7eb;}
@@ -517,6 +520,12 @@ input[type=range]::-moz-range-thumb{
 .oc-conc{font-size:11px;color:var(--muted);margin-top:1px;}
 .oc-body{font-size:12px;color:var(--text2);line-height:1.7;}
 .o-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;margin-bottom:14px;}
+/* 이외·심혈관은 그리드라 칸이 좁음 → 헤더 세로 배치(약품명/배지 겹침 방지) */
+.o-grid .dc-btn{flex-direction:column;align-items:stretch;gap:4px;}
+.o-grid .dc-r{justify-content:flex-start;max-width:100%;margin-left:14px;}
+.o-grid .dc-name{white-space:normal;}
+.o-grid .oc-hdr-btn{flex-wrap:wrap;}
+.o-grid .oc-tag{flex-basis:100%;margin-left:31px;}
 .ref-tbl{width:100%;border-collapse:collapse;font-size:12px;margin-top:4px;}
 .ref-tbl th{padding:5px 8px;border-bottom:1.5px solid var(--border);color:var(--muted);font-weight:700;text-align:left;background:var(--surface2);}
 .ref-tbl td{padding:5px 8px;border-bottom:.5px solid var(--border);}
@@ -1152,6 +1161,7 @@ input[type=range]::-moz-range-thumb{
 [data-theme="dark"] .hep-nomo tr.nomo-low td{background:var(--yellow-lt) !important;}
 [data-theme="dark"] .hep-nomo tr.nomo-ok td{background:var(--green-lt) !important;}
 [data-theme="dark"] .hep-nomo tr.nomo-high td{background:var(--red-lt) !important;}
+[data-theme="dark"] .bic-mix-btn.active{background:var(--cyan-lt) !important;border-color:var(--cyan) !important;color:var(--cyan) !important;}
 /* 인라인 하드코딩 밝은 배경 보정 */
 [data-theme="dark"] [style*="background:#fff7ed"]{background:var(--orange-lt) !important;}
 [data-theme="dark"] [style*="background:#fefce8"],[data-theme="dark"] [style*="background:#fffbeb"]{background:var(--yellow-lt) !important;}
@@ -4275,6 +4285,15 @@ var DRUGS = [
     </div>
     <div id="bicarb-bd-res" class="bic-bd-result">Base deficit 또는 HCO₃ 입력 시 계산</div>
 
+    <!-- ②-b Mix/희석 가이드 (한국 앰플 50mEq/50mL) -->
+    <div class="bic-sec-title" style="margin-top:10px;">②-b Mix · 희석 (한국 앰플 50 mEq/50 mL)</div>
+    <div class="bic-mix-modes">
+      <button type="button" class="bic-mix-btn active" id="bicarb-mix-central" onclick="setBicMix('central')">중심정맥 1:5</button>
+      <button type="button" class="bic-mix-btn" id="bicarb-mix-periph" onclick="setBicMix('periph')">말초 1:10</button>
+      <button type="button" class="bic-mix-btn" id="bicarb-mix-conc" onclick="setBicMix('conc')">Volume제한(neat)</button>
+    </div>
+    <div id="bicarb-mix-res" class="bic-bd-result">위 ②에서 필요량 계산 시 앰플·희석 부피 표시</div>
+
     <!-- ③ pH별 infusion 프로토콜 -->
     <div class="hep-nomo-wrap" style="margin-top:12px;">
       <div class="hep-nomo-title">③ pH별 Infusion 프로토콜</div>
@@ -4469,6 +4488,15 @@ function cHep(){
   renderBig('hep-res',d*bwt()/getConc('hep',m.conc,m.concUnit),d,m.min,m.max);
   updHepLoad();
 }
+window.bicMixMode='central';
+function setBicMix(mode){
+  window.bicMixMode=mode;
+  ['central','periph','conc'].forEach(function(m){
+    var b=document.getElementById('bicarb-mix-'+m);
+    if(b)b.classList.toggle('active',m===mode);
+  });
+  cBicarb();
+}
 function cBicarb(){
   var wt=bwt();
   // ① Bolus
@@ -4501,6 +4529,36 @@ function cBicarb(){
     } else {
       bdEl.className='bic-bd-result';
       bdEl.textContent='Base deficit 또는 HCO₃ 입력 시 계산';
+    }
+    // ②-b Mix/희석
+    var mixEl=document.getElementById('bicarb-mix-res');
+    if(mixEl){
+      // 우선순위: base deficit 계산값(절반) > bolus 용량
+      var mixMEq=null, srcLabel='';
+      if(need!=null && need>0){ mixMEq=Math.round(need/2); srcLabel='②절반'; }
+      else { var bMEq=(parseFloat(document.getElementById('bicarb-d').value)||1)*wt; if(bMEq>0){ mixMEq=Math.round(bMEq); srcLabel='①bolus'; } }
+      if(mixMEq!=null && mixMEq>0){
+        var vials=mixMEq/50;                // 앰플 수 (50 mEq/vial)
+        var bicVol=mixMEq;                  // 8.4% mL = mEq (1:1)
+        var mode=window.bicMixMode||'central';
+        var ratio, route, note;
+        if(mode==='central'){ ratio=5; route='중심정맥'; note='고삼투압 — 중심정맥 권장'; }
+        else if(mode==='periph'){ ratio=10; route='말초'; note='말초 가능 (1.26% 이하 안전)'; }
+        else { ratio=1; route='중심정맥 필수'; note='희석 안 함 — volume 최소, 누출 시 조직괴사 위험'; }
+        var diluent=bicVol*(ratio-1);       // 추가 희석액 mL
+        var totalVol=bicVol*ratio;          // 최종 부피
+        var finalConc=(mixMEq/totalVol).toFixed(2);  // mEq/mL
+        mixEl.className='bic-bd-result has';
+        mixEl.innerHTML='<span style="color:var(--muted);font-size:11px;">['+srcLabel+'] </span><b>'+mixMEq+' mEq</b> = 8.4% <b>'+bicVol+' mL</b> ('
+          +(vials>=1?vials.toFixed(vials%1?1:0)+' vial':(vials*50).toFixed(0)+' mEq')+')<br>'
+          +'<b style="color:#0891b2;">'+route+' '+(ratio>1?'1:'+ratio:'neat')+'</b> → '
+          +(diluent>0?'+ D5W '+Math.round(diluent)+' mL = ':'')
+          +'총 <b>'+Math.round(totalVol)+' mL</b> (<b>'+finalConc+' mEq/mL</b>)<br>'
+          +'<span style="color:var(--muted);font-size:11px;">'+note+' · D5W 희석(NS는 신부전 시 고Na 주의)</span>';
+      } else {
+        mixEl.className='bic-bd-result';
+        mixEl.textContent='① bolus 또는 ② 필요량 계산 시 앰플·희석 부피 표시';
+      }
     }
   }
 }
@@ -4837,13 +4895,15 @@ function setHepProto(p){
 function updHepLoad(){
   var el=document.getElementById('hep-load'); if(!el)return;
   var w=bwt();
+  var conc=getConc('hep',100,'U');  // U/mL (커스텀 mix 반영)
+  function mlStr(units){ var ml=units/conc; return ' → <b>'+(ml<10?ml.toFixed(1):Math.round(ml))+' mL</b> <span style="color:var(--muted);">(@'+Math.round(conc)+' U/mL)</span>'; }
   if(hepProto==='stemi'){
     var ld=Math.round(80*w);
-    el.innerHTML='<b>STEMI 로딩:</b> 80 U/kg × '+w+'kg = <b>'+ld.toLocaleString()+' U</b> IV bolus';
+    el.innerHTML='<b>STEMI 로딩:</b> 80 U/kg × '+w+'kg = <b>'+ld.toLocaleString()+' U</b>'+mlStr(ld)+' IV bolus';
   } else {
     var raw=60*w, ld=Math.min(raw,5000), capped=raw>5000;
-    el.innerHTML='<b>일반 로딩:</b> 60 U/kg × '+w+'kg = <b>'+Math.round(ld).toLocaleString()+' U</b> IV bolus'
-      +(capped?' <span style="color:var(--orange);">(상한 5000 U 적용)</span>':'');
+    el.innerHTML='<b>일반 로딩:</b> 60 U/kg × '+w+'kg = <b>'+Math.round(ld).toLocaleString()+' U</b>'+mlStr(Math.round(ld))+' IV bolus'
+      +(capped?' <span style="color:var(--orange);">(상한 5000 U)</span>':'');
   }
 }
 function cDopa(){
