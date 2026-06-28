@@ -97,6 +97,8 @@ input{-webkit-appearance:none;appearance:none;font-size:16px;} /* 16px 미만이
 .hdr-sub{font-size:11px;color:var(--muted);margin-top:1px;}
 .hdr-feedback{font-size:11.5px;font-weight:600;padding:6px 12px;background:var(--accent-lt);color:var(--accent);border:1px solid var(--accent-bg);border-radius:9px;text-decoration:none;white-space:nowrap;}
 .hdr-feedback:active{background:var(--accent-bg);}
+.hdr-sibling{font-size:11.5px;font-weight:600;padding:6px 12px;background:var(--teal-lt);color:var(--teal);border:1px solid var(--teal-bg);border-radius:9px;text-decoration:none;white-space:nowrap;display:inline-flex;align-items:center;gap:4px;}
+.hdr-sibling:active{background:var(--teal-bg);}
 .hdr-r{display:flex;align-items:center;gap:8px;flex-shrink:0;}
 
 /* ── Patient panel ── */
@@ -820,6 +822,10 @@ input[type=range]::-moz-range-thumb{
   .vent-tbl-wrap table{font-size:9.5px !important;}
 }
 /* 320px급 극소폭: 상단 환자·약물 바 버튼 축소 + 줄바꿈 허용 */
+@media (max-width:480px){
+  .app-header{flex-wrap:wrap;gap:8px;}
+  .hdr-r{flex-wrap:wrap;justify-content:flex-end;}
+}
 @media (max-width:420px){
   .pt-compact{flex-wrap:wrap;gap:6px;}
 }
@@ -1263,6 +1269,7 @@ if('serviceWorker' in navigator){
     <div class="hdr-title">ICU 약물 계산기</div>
   </div>
   <div class="hdr-r">
+    <a class="hdr-sibling" href="https://chronic-disease-dun.vercel.app/" target="_blank" rel="noopener">🩺 만성질환 가이드</a>
     <button class="hdr-feedback" type="button" onclick="openFeedback()">💬 피드백</button>
     <button class="theme-toggle" type="button" onclick="toggleTheme()" id="theme-toggle" aria-label="다크모드 전환" title="다크모드 전환">🌙</button>
   </div>
