@@ -5,7 +5,8 @@
       "namespace": "android_app",
       "package_name": "kr.icucalc.twa",
       "sha256_cert_fingerprints": [
-        "D9:FC:EB:E3:9E:FF:1B:E3:E2:80:4A:7D:B6:C0:51:12:F7:30:A6:0E:0E:72:8A:46:AD:69:BB:A1:65:BF:E6:23"
+        "D9:FC:EB:E3:9E:FF:1B:E3:E2:80:4A:7D:B6:C0:51:12:F7:30:A6:0E:0E:72:8A:46:AD:69:BB:A1:65:BF:E6:23",
+        "DD:CA:F8:25:12:78:81:96:DB:C5:DF:C2:BB:40:AC:58:62:A8:31:75:E0:7A:9E:79:78:D6:9E:FF:74:5C:5F:6B"
       ]
     }
   }
