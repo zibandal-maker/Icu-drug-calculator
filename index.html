@@ -10,14 +10,14 @@
 <meta name="keywords" content="ICU 약물 계산기, 중환자실, 승압제 계산, 노르에피네프린, 바소프레신, 도파민, 도부타민, 덱스메데토미딘, 미다졸람, 프로포폴, 레미펜타닐, 펜타닐, 라식스, 에스몰롤, 로쿠로늄, 수가마덱스, 수액 관리, mL/hr">
 <meta name="author" content="ICU Drug Calculator">
 <meta name="robots" content="index, follow">
-<link rel="canonical" href="https://icu-drug-calculator.vercel.app/icu_drug_calculator.html">
+<link rel="canonical" href="https://icucalc.kr/">
 <meta name="google-site-verification" content="860d075650487ad0">
 
 <!-- ── Open Graph (카카오·슬랙·SNS 공유 미리보기) ── -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="ICU 약물 계산기">
 <meta property="og:description" content="승압제·진정제·이뇨제 mL/hr 자동 계산. 멀티 환자 세션, 수액 I/O 관리, 응급약물 참조. 의료전문가용 ICU 처방 보조 도구.">
-<meta property="og:url" content="https://icu-drug-calculator.vercel.app/icu_drug_calculator.html">
+<meta property="og:url" content="https://icucalc.kr/">
 <meta property="og:locale" content="ko_KR">
 <meta property="og:site_name" content="ICU 약물 계산기">
 
@@ -29,14 +29,14 @@
   "name": "ICU 약물 계산기",
   "alternateName": "ICU Drug Calculator",
   "description": "중환자실 약물 용량 자동 계산 도구. 승압제, 진정·진통제, 이뇨제, NMBA, 항부정맥제 mL/hr 계산. 수액 I/O 관리 포함.",
-  "url": "https://icu-drug-calculator.vercel.app/icu_drug_calculator.html",
+  "url": "https://icucalc.kr/",
   "applicationCategory": "MedicalApplication",
   "operatingSystem": "Web Browser",
   "inLanguage": "ko",
   "author": {
     "@type": "Organization",
     "name": "ICU Drug Calculator",
-    "url": "https://icu-drug-calculator.vercel.app"
+    "url": "https://icucalc.kr"
   },
   "audience": {
     "@type": "MedicalAudience",
@@ -823,11 +823,25 @@ input[type=range]::-moz-range-thumb{
 }
 /* 320px급 극소폭: 상단 환자·약물 바 버튼 축소 + 줄바꿈 허용 */
 @media (max-width:480px){
-  .app-header{flex-wrap:wrap;gap:8px;}
-  .hdr-r{flex-wrap:wrap;justify-content:flex-end;}
+  .app-header{flex-wrap:nowrap;gap:7px;padding:9px 12px;}
+  .hdr-l{gap:9px;min-width:0;flex:1;}
+  .logo{width:29px;height:29px;font-size:15px;}
+  .hdr-title{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .hdr-r{flex-wrap:nowrap;gap:5px;flex-shrink:0;}
+  .hdr-sibling{font-size:11px;padding:5px 9px;gap:3px;}
+  .hdr-feedback{font-size:12px;padding:5px 8px;}
+  .hdr-fb-txt{display:none;}
 }
 @media (max-width:420px){
   .pt-compact{flex-wrap:wrap;gap:6px;}
+}
+@media (max-width:375px){
+  .app-header{gap:5px;padding:9px 9px;}
+  .hdr-l{gap:6px;}
+  .logo{width:25px;height:25px;font-size:13px;}
+  .hdr-title{font-size:13px;}
+  .hdr-sibling{font-size:10px;padding:5px 7px;gap:2px;}
+  .hdr-r{gap:4px;}
 }
 @media (max-width:340px){
   .pt-active-btn{padding:7px 8px;font-size:10.5px;gap:3px;}
@@ -1261,6 +1275,22 @@ if('serviceWorker' in navigator){
 <script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
+<noscript>
+<div style="max-width:760px;margin:0 auto;padding:24px 18px;font-family:sans-serif;line-height:1.7;color:#1a1a1a;">
+<h1>ICU 약물 계산기 — 중환자실 인퓨전 용량 자동 계산</h1>
+<p>이 사이트는 중환자실(ICU) 의료진을 위한 <strong>약물 용량 계산 사이트</strong>입니다. 환자 체중을 한 번 입력하면 승압제·진정제·항부정맥제 등의 <strong>mcg/kg/min 계산</strong> 및 mL/hr 주입 속도가 자동으로 산출됩니다.</p>
+<h2>지원 약물</h2>
+<ul>
+<li><strong>승압제</strong>: 노르에피네프린, 바소프레신, 에피네프린, 페닐에프린, 도부타민, 도파민</li>
+<li><strong>진정·진통제</strong>: 덱스메데토미딘, 미다졸람, 프로포폴, 레미펜타닐, 펜타닐, 에토미데이트</li>
+<li><strong>심혈관·항부정맥</strong>: 밀리논, 딜티아젬, 에스몰롤, 라베탈롤, 아미오다론, 리도카인, 니트로글리세린</li>
+<li><strong>이외</strong>: 인슐린, 라식스(푸로세미드), 헤파린, 케프라, 소디움 바이카보네이트, 옥트레오타이드</li>
+</ul>
+<h2>주요 기능</h2>
+<p>멀티 환자 세션 관리, 수액 I/O 관리, IBW·CrCl·전해질 보정 계산, 응급 약물 참조, 범용 인퓨전 계산기를 제공합니다. 다크모드를 지원하며 오프라인에서도 동작합니다.</p>
+<p>본 계산기의 모든 용량과 계산은 참고용이며, 실제 투여 전 반드시 독립적으로 재확인하십시오. JavaScript를 활성화하면 전체 계산 기능을 사용할 수 있습니다.</p>
+</div>
+</noscript>
 <div class="app">
 
 <div class="app-header">
@@ -1270,7 +1300,7 @@ if('serviceWorker' in navigator){
   </div>
   <div class="hdr-r">
     <a class="hdr-sibling" href="https://chronic-disease-dun.vercel.app/" target="_blank" rel="noopener">🩺 만성질환 가이드</a>
-    <button class="hdr-feedback" type="button" onclick="openFeedback()">💬 피드백</button>
+    <button class="hdr-feedback" type="button" onclick="openFeedback()">💬<span class="hdr-fb-txt"> 피드백</span></button>
     <button class="theme-toggle" type="button" onclick="toggleTheme()" id="theme-toggle" aria-label="다크모드 전환" title="다크모드 전환">🌙</button>
   </div>
 </div>
