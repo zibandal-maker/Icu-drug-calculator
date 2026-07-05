@@ -765,6 +765,9 @@ input[type=range]::-moz-range-thumb{
 .elyte-inp-wrap input{flex:1;border:none;background:none;font-family:var(--mono);font-size:15px;font-weight:700;color:var(--text);outline:none;width:100%;-moz-appearance:textfield;}
 .elyte-inp-wrap input::-webkit-inner-spin-button{-webkit-appearance:none;}
 .elyte-inp-wrap span{font-size:10.5px;color:var(--muted);}
+.unit-toggle{font-size:10.5px;color:var(--accent);font-weight:700;cursor:pointer;user-select:none;background:var(--accent-lt);border:1px solid var(--accent-bg);border-radius:6px;padding:2px 6px;white-space:nowrap;transition:background .12s;}
+.unit-toggle:active{background:var(--accent-bg);}
+.unit-toggle::after{content:"⇄";font-size:9px;margin-left:3px;opacity:.65;}
 .elyte-field select{height:36px;border:1px solid var(--border);background:var(--surface2);border-radius:8px;padding:0 9px;font-size:12.5px;color:var(--text);outline:none;}
 .sex-toggle{display:flex;gap:4px;height:36px;}
 .sex-btn{flex:1;border:1px solid var(--border);background:var(--surface2);border-radius:8px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;font-family:var(--sans);transition:all .12s;}
@@ -1701,7 +1704,7 @@ if('serviceWorker' in navigator){
       </div>
       <div class="elyte-field">
         <label>HCO₃⁻</label>
-        <div class="elyte-inp-wrap"><input type="number" id="abg-hco3" value="14" min="2" max="60" step="1" inputmode="decimal" oninput="calcABGA()"><span>mEq/L</span></div>
+        <div class="elyte-inp-wrap"><input type="number" id="abg-hco3" value="14" min="2" max="60" step="1" inputmode="decimal" oninput="calcABGA()"><span class="unit-toggle" id="hco3-unit-toggle" onclick="toggleHco3Unit()" title="HCO₃⁻는 1가 이온이라 mEq/L와 mmol/L 수치가 동일합니다 (표기만 전환)">mEq/L</span></div>
       </div>
       <div class="elyte-field">
         <label>경과</label>
@@ -4791,6 +4794,21 @@ function calcNaCorrection(){
 }
 
 // ── ABGA 분석기 ──
+var HCO3_UNIT='mEq/L';
+function toggleHco3Unit(){
+  HCO3_UNIT = (HCO3_UNIT==='mEq/L') ? 'mmol/L' : 'mEq/L';
+  applyHco3Unit();
+  try{ localStorage.setItem('icucalc-hco3unit', HCO3_UNIT); }catch(e){}
+}
+function applyHco3Unit(){
+  var el=document.getElementById('hco3-unit-toggle');
+  if(el) el.textContent=HCO3_UNIT;
+}
+function initHco3Unit(){
+  try{ var s=localStorage.getItem('icucalc-hco3unit'); if(s==='mmol/L'||s==='mEq/L') HCO3_UNIT=s; }catch(e){}
+  applyHco3Unit();
+}
+
 function calcABGA(){
   var ph=parseFloat((document.getElementById('abg-ph')||{}).value)||7.4;
   var co2=parseFloat((document.getElementById('abg-co2')||{}).value)||40;
@@ -6764,6 +6782,7 @@ bindOcRateRows();
 initSessions();
 try{initCRRT();}catch(e){}
 try{initVent();}catch(e){}
+try{initHco3Unit();}catch(e){}
 
 
 
