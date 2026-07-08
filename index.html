@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>ICU 약물 계산기</title>
 
 <!-- ── SEO ── -->
@@ -1255,12 +1255,6 @@ textarea.fb-inp{resize:vertical;}
 .fb-submit{width:100%;padding:12px;border:none;border-radius:10px;background:var(--accent);color:#fff;font-size:15px;font-weight:800;cursor:pointer;}
 .fb-submit:disabled{opacity:0.6;cursor:default;}
 .hdr-feedback{cursor:pointer;}
-/* ===== P1 모바일 개선 (2026-07-08) ===== */
-/* 줌 허용(maximum-scale 제거)에 따른 iOS 포커스 자동확대 방지: 입력창 ≥16px */
-.pt-compact-wt input,.tit-val-wrap input,.modal-input,.elyte-inp-wrap input,.calc-field input,.calc-field select,.custom-form-row input[type="text"],.custom-form-row input[type="number"],.crrt-lbl input[type="number"],.vent-lbl input[type="number"],#fluid-temp,#fluid-target,#m-name,#m-wt{font-size:16px !important;}
-/* 터치타깃 확대: titrate +/- 버튼 33→44px, 탭 칩 최소 44px (Apple HIG) */
-.tit-btn{width:44px !important;height:44px !important;}
-.tab{min-height:44px;}
 </style>
 <!-- ===== PWA / TWA 연결 (v3.11) ===== -->
 <link rel="manifest" href="/manifest.json">
