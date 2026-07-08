@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>ICU 약물 계산기</title>
 
 <!-- ── SEO ── -->
@@ -1255,6 +1255,12 @@ textarea.fb-inp{resize:vertical;}
 .fb-submit{width:100%;padding:12px;border:none;border-radius:10px;background:var(--accent);color:#fff;font-size:15px;font-weight:800;cursor:pointer;}
 .fb-submit:disabled{opacity:0.6;cursor:default;}
 .hdr-feedback{cursor:pointer;}
+/* ===== P1 모바일 개선 (2026-07-08) ===== */
+/* 줌 허용(maximum-scale 제거)에 따른 iOS 포커스 자동확대 방지: 입력창 ≥16px */
+.pt-compact-wt input,.tit-val-wrap input,.modal-input,.elyte-inp-wrap input,.calc-field input,.calc-field select,.custom-form-row input[type="text"],.custom-form-row input[type="number"],.crrt-lbl input[type="number"],.vent-lbl input[type="number"],#fluid-temp,#fluid-target,#m-name,#m-wt{font-size:16px !important;}
+/* 터치타깃 확대: titrate +/- 버튼 33→44px, 탭 칩 최소 44px (Apple HIG) */
+.tit-btn{width:44px !important;height:44px !important;}
+.tab{min-height:44px;}
 </style>
 <!-- ===== PWA / TWA 연결 (v3.11) ===== -->
 <link rel="manifest" href="/manifest.json">
@@ -3668,7 +3674,7 @@ var DRUGS = [
   sub:'500mg/50mL (10 mg/mL) · 1–4 mg/kg/hr 유지',
   badges:[['bd-blue','😴 GABA-A'],['bd-indigo','IBW 권장']],
   /* P0-1 A: 용량 메타 (현재값 DATA화·무회귀) */
-  dose:{ default:2, unit:'mg/kg/hr', min:1, max:12, conc:10, concUnit:'mg', mode:'wt_hr' },
+  dose:{ default:2, unit:'mg/kg/hr', min:1, max:4, conc:10, concUnit:'mg', mode:'wt_hr' },
   body:`
     <div class="info-row">
       <button class="ftab active" type="button" id="prop-f-ibw" onclick="selF('prop','ibw')">IBW 기준</button>
@@ -3880,6 +3886,7 @@ var DRUGS = [
     <div id="lasix-res" class="res-big empty"><span class="res-big-num empty">체중 입력 후 계산</span></div>
     <div id="lasix-load" class="ban ban-info" style="margin-top:8px;"></div>
     <div id="lasix-sub" style="margin-top:6px;font-size:12px;color:var(--muted);"></div>
+    <div class="ref-note" style="margin-top:6px;">💧 희석은 <b>0.9% NS만</b> (저pH·포도당액서 침전) · 호환농도 0.02–3 mg/mL, 원액 10 mg/mL 직접주입도 가능 · 최대주입 <b>4 mg/min</b>(중증신부전 SCr&gt;5 시 2.5) — 이독성 방지. 기본 400mg/250mL(1.6 mg/mL)은 예시 희석, <b>커스텀으로 원내 믹스에 맞추세요.</b> <span style="opacity:.7;">출처: Furosemide SmPC(emc), Medinfo Galway, DOSE trial NEJM 2011</span></div>
   `
 },
 

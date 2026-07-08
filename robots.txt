@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://icu-drug-calculator.vercel.app/sitemap.xml
+Sitemap: https://icucalc.kr/sitemap.xml
