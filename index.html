@@ -1255,6 +1255,16 @@ textarea.fb-inp{resize:vertical;}
 .fb-submit{width:100%;padding:12px;border:none;border-radius:10px;background:var(--accent);color:#fff;font-size:15px;font-weight:800;cursor:pointer;}
 .fb-submit:disabled{opacity:0.6;cursor:default;}
 .hdr-feedback{cursor:pointer;}
+/* ===== 공지 배너: 안드로이드 베타 모집 ===== */
+.notice-beta{display:flex;align-items:flex-start;gap:10px;background:linear-gradient(135deg,var(--accent-lt),var(--surface2));border:1px solid var(--accent-bg);border-radius:12px;padding:12px 34px 12px 14px;margin:10px 0;box-shadow:var(--sh);position:relative;}
+.notice-beta .nb-ic{font-size:22px;line-height:1.2;flex-shrink:0;}
+.notice-beta .nb-body{flex:1;min-width:0;}
+.notice-beta .nb-title{font-size:13.5px;font-weight:800;color:var(--accent);margin-bottom:3px;}
+.notice-beta .nb-desc{font-size:12px;color:var(--text2);line-height:1.55;}
+.notice-beta .nb-actions{display:flex;gap:8px;margin-top:9px;flex-wrap:wrap;}
+.notice-beta .nb-cta{font-size:12px;font-weight:700;padding:7px 14px;background:var(--accent);color:#fff;border:none;border-radius:8px;cursor:pointer;touch-action:manipulation;}
+.notice-beta .nb-later{font-size:12px;font-weight:600;padding:7px 12px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;cursor:pointer;touch-action:manipulation;}
+.notice-beta .nb-x{position:absolute;top:7px;right:9px;background:none;border:none;color:var(--muted);font-size:17px;cursor:pointer;line-height:1;padding:2px;}
 </style>
 <!-- ===== PWA / TWA 연결 (v3.11) ===== -->
 <link rel="manifest" href="/manifest.json">
@@ -1348,6 +1358,19 @@ if('serviceWorker' in navigator){
     <button class="tab" type="button" onclick="switchTab('fluid',this)">💧 수액</button>
   </div>
 </div><!-- /sticky-bar -->
+
+<div class="notice-beta" id="notice-androidbeta">
+  <button class="nb-x" type="button" onclick="dismissNotice('notice-androidbeta')" aria-label="닫기">×</button>
+  <div class="nb-ic">📱</div>
+  <div class="nb-body">
+    <div class="nb-title">🎉 안드로이드 앱 베타 테스터 모집</div>
+    <div class="nb-desc">현재 <b>안드로이드(Play 스토어) 앱</b>을 준비 중입니다. 베타 참여를 원하시면 <b>Play 스토어 계정 Gmail 주소</b>를 피드백으로 보내주세요. 확인 후 <b>베타 설치 링크</b>를 보내드립니다.</div>
+    <div class="nb-actions">
+      <button class="nb-cta" type="button" onclick="openBetaSignup()">📩 베타 신청하기</button>
+      <button class="nb-later" type="button" onclick="dismissNotice('notice-androidbeta')">나중에</button>
+    </div>
+  </div>
+</div>
 
 <div id="tab-vp"></div>
 <div id="tab-sd" style="display:none;"></div>
@@ -7843,6 +7866,7 @@ function initCRRT(){
         <select id="fb-type" class="fb-inp">
           <option value="버그">🐞 버그 신고</option>
           <option value="기능요청">✨ 기능 요청</option>
+          <option value="안드로이드베타">📱 안드로이드 베타 신청</option>
           <option value="임상의견">🩺 임상 의견</option>
           <option value="기타">💭 기타</option>
         </select>
@@ -7858,6 +7882,24 @@ function initCRRT(){
     </div>
   </div>
 </div>
+
+<script>
+/* ===== 공지 배너(안드로이드 베타) 제어 ===== */
+function dismissNotice(id){
+  var el=document.getElementById(id); if(el)el.style.display='none';
+  try{ localStorage.setItem('icucalc-notice-androidbeta','1'); }catch(e){}
+}
+function openBetaSignup(){
+  if(typeof openFeedback==='function') openFeedback();
+  var t=document.getElementById('fb-type'); if(t)t.value='안드로이드베타';
+  var m=document.getElementById('fb-msg');
+  if(m){ if(!m.value.trim()) m.value='📱 안드로이드 앱 베타 신청합니다.\n▶ Play 스토어 계정 Gmail 주소: (여기에 입력)'; setTimeout(function(){ m.focus(); },120); }
+}
+/* 이미 닫은 사용자는 숨김 */
+(function(){
+  try{ if(localStorage.getItem('icucalc-notice-androidbeta')==='1'){ var el=document.getElementById('notice-androidbeta'); if(el)el.style.display='none'; } }catch(e){}
+})();
+</script>
 
 </body>
 </html>
