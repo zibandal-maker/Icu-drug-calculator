@@ -3848,26 +3848,26 @@ var DRUGS = [
   nameKr:'에스메론 · NMBA',
   sub:'10 mg/mL · RSI 1.2 mg/kg · 지속주입 4–16 mcg/kg/min',
   badges:[['bd-purple','💜 NMBA'],['bd-green','Sugammadex 역전']],
-  /* v3.15: 지속주입 용량 메타 DATA화 (하드코딩 0.3/0.6 mg/kg/hr 리터럴 제거). 근거: FDA 라벨·EMCrit IBCC */
-  dose:{ default:10, unit:'mcg/kg/min', min:4, max:16, conc:10000, concUnit:'mcg', mode:'wt_min' },
+  /* v3.15: 지속주입 용량 메타 DATA화 (하드코딩 0.3/0.6 mg/kg/hr 리터럴 제거). 근거: FDA 라벨·EMCrit IBCC. 기본 믹스 250mg/50mL=5mg/mL(FDA 안정성 상한·50mL 시린지) */
+  dose:{ default:10, unit:'mcg/kg/min', min:4, max:16, conc:5000, concUnit:'mcg', mode:'wt_min' },
   body:`
     <div id="roc-bolus-grid" class="calc-grid"></div>
     <div class="inf-divider" style="margin:10px 0 6px;font-size:12px;color:var(--muted);border-top:1px dashed var(--border);padding-top:8px;">💉 지속주입 (Continuous Infusion)</div>
-    <div class="info-row"><span class="ic">💉 100mg/10mL</span><span class="sep">=</span><span class="ic">농도 <b>10 mg/mL</b> (원액)</span></div>
+    <div class="info-row"><span class="ic">💉 250mg/50mL</span><span class="sep">=</span><span class="ic">농도 <b>5 mg/mL</b> (희석)</span></div>
     <div class="mix-panel">
       <button class="mix-ftab-custom" type="button" id="mix-btn-roc" onclick="toggleCustomMix('roc',this)">커스텀</button>
       <div class="mix-custom-wrap" id="mix-custom-roc">
         <div class="mix-custom-row">
           <span class="mix-custom-label">약물량</span>
-          <input class="mix-custom-inp" type="number" id="mix-drug-roc" value="100" min="0.1" step="any" inputmode="decimal" oninput="updateCustomConc('roc',cRoc)">
+          <input class="mix-custom-inp" type="number" id="mix-drug-roc" value="250" min="0.1" step="any" inputmode="decimal" oninput="updateCustomConc('roc',cRoc)">
           <span class="mix-custom-unit">mg</span>
           <span class="mix-custom-unit" style="padding:0 4px;color:var(--muted2);">+</span>
           <span class="mix-custom-label">총 용량</span>
-          <input class="mix-custom-inp" type="number" id="mix-vol-roc" value="10" min="1" step="any" inputmode="decimal" oninput="updateCustomConc('roc',cRoc)">
+          <input class="mix-custom-inp" type="number" id="mix-vol-roc" value="50" min="1" step="any" inputmode="decimal" oninput="updateCustomConc('roc',cRoc)">
           <span class="mix-custom-unit">mL</span>
           <input type="hidden" id="mix-unit-roc" value="mcg">
         </div>
-        <div class="mix-custom-result" id="mix-res-roc">= 10000.0 mcg/mL</div>
+        <div class="mix-custom-result" id="mix-res-roc">= 5000.0 mcg/mL</div>
       </div>
     </div>
     <div class="slider-wrap"><input type="range" id="roc-sl" min="4" max="16" step="1" style="accent-color:#7c3aed;" oninput="syncInput('roc-sl','roc-d',cRoc)"></div>
@@ -5179,7 +5179,7 @@ function cRoc(){
   var dEl=document.getElementById('roc-d');
   if(dEl && m){
     var d=parseFloat(dEl.value)||m.default;
-    var conc=getConc('roc',m.conc,m.concUnit);              // mcg/mL (원액 10000 · 커스텀 희석 반영)
+    var conc=getConc('roc',m.conc,m.concUnit);              // mcg/mL (기본 5000=5mg/mL · 커스텀 희석 반영)
     var rate=d*w*60/conc;                                    // mode wt_min: d×bwt×60/conc = mL/hr
     var note=d+' mcg/kg/min · '+(d*0.06).toFixed(2)+' mg/kg/hr · BWT '+w+'kg';
     renderBig('roc-res',rate,d,m.min,m.max,'mL / hr',note);
