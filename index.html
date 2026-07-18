@@ -3195,7 +3195,7 @@ function toggleCustomMix(drugId, btn){
   // 재계산
   var calcMap = {
     'epi':'cEpi','dobu':'cDobu','dex':'cDex','midaz':'cMidaz',
-    'ultiva':'cUltiva','bec':'cBec','lasix':'cLasix','prop':'cProp',
+    'ultiva':'cUltiva','bec':'cBec','roc':'cRoc','lasix':'cLasix','prop':'cProp',
     'fent':'cFent','esmo':'cEsmo',
     'milri':'cMilri','dilti':'cDilti','octreo':'cOctreo','hep':'cHep','labet':'cLabet','ins':'cIns','keppra':'cKeppra','bicarb':'cBicarb'
   };
@@ -3842,14 +3842,43 @@ var DRUGS = [
 },
 {
   id:'c-roc', tab:'sd',
+  mapId:'drug:rocuronium',
   color:'#7c3aed',
   name:'Rocuronium',
   nameKr:'에스메론 · NMBA',
-  sub:'10 mg/mL · RSI 1.2 mg/kg · 일반 0.6 mg/kg',
+  sub:'10 mg/mL · RSI 1.2 mg/kg · 지속주입 4–16 mcg/kg/min',
   badges:[['bd-purple','💜 NMBA'],['bd-green','Sugammadex 역전']],
+  /* v3.15: 지속주입 용량 메타 DATA화 (하드코딩 0.3/0.6 mg/kg/hr 리터럴 제거). 근거: FDA 라벨·EMCrit IBCC */
+  dose:{ default:10, unit:'mcg/kg/min', min:4, max:16, conc:10000, concUnit:'mcg', mode:'wt_min' },
   body:`
     <div id="roc-bolus-grid" class="calc-grid"></div>
-    <div id="roc-inf-info" class="ban ban-info" style="margin-top:8px;"></div>
+    <div class="inf-divider" style="margin:10px 0 6px;font-size:12px;color:var(--muted);border-top:1px dashed var(--border);padding-top:8px;">💉 지속주입 (Continuous Infusion)</div>
+    <div class="info-row"><span class="ic">💉 100mg/10mL</span><span class="sep">=</span><span class="ic">농도 <b>10 mg/mL</b> (원액)</span></div>
+    <div class="mix-panel">
+      <button class="mix-ftab-custom" type="button" id="mix-btn-roc" onclick="toggleCustomMix('roc',this)">커스텀</button>
+      <div class="mix-custom-wrap" id="mix-custom-roc">
+        <div class="mix-custom-row">
+          <span class="mix-custom-label">약물량</span>
+          <input class="mix-custom-inp" type="number" id="mix-drug-roc" value="100" min="0.1" step="any" inputmode="decimal" oninput="updateCustomConc('roc',cRoc)">
+          <span class="mix-custom-unit">mg</span>
+          <span class="mix-custom-unit" style="padding:0 4px;color:var(--muted2);">+</span>
+          <span class="mix-custom-label">총 용량</span>
+          <input class="mix-custom-inp" type="number" id="mix-vol-roc" value="10" min="1" step="any" inputmode="decimal" oninput="updateCustomConc('roc',cRoc)">
+          <span class="mix-custom-unit">mL</span>
+          <input type="hidden" id="mix-unit-roc" value="mcg">
+        </div>
+        <div class="mix-custom-result" id="mix-res-roc">= 10000.0 mcg/mL</div>
+      </div>
+    </div>
+    <div class="slider-wrap"><input type="range" id="roc-sl" min="4" max="16" step="1" style="accent-color:#7c3aed;" oninput="syncInput('roc-sl','roc-d',cRoc)"></div>
+    <div class="titration-row">
+      <button class="tit-btn" type="button" onclick="titrate('roc-d','roc-sl',-1,cRoc)">−</button>
+      <div class="tit-val-wrap"><input type="number" id="roc-d" value="10" min="4" max="16" step="1" inputmode="decimal" oninput="syncSlider('roc-d','roc-sl');cRoc()"><span class="tit-unit">mcg/kg/min</span></div>
+      <button class="tit-btn" type="button" onclick="titrate('roc-d','roc-sl',1,cRoc)">＋</button>
+      <span class="tit-step">± 1</span>
+    </div>
+    <div id="roc-res" class="res-big empty"><span class="res-big-num empty">체중 입력 후 계산</span></div>
+    <div class="ban ban-info" style="margin-top:8px;"><span class="ban-icon">💡</span><span>초기 10 mcg/kg/min(≈0.6 mg/kg/hr) 시작, 범위 4–16 mcg/kg/min. TOF(말초신경자극) 1–2 twitch 목표로 적정. 6–9시간 후 요구량 ~40%↓(재분포) 감량 고려. 근거: FDA 라벨·EMCrit IBCC.</span></div>
   `
 },
 {
@@ -5137,7 +5166,7 @@ function cFent(){
 }
 function cRoc(){
   var w=bwt();
-  // bolus grid
+  // bolus grid (기존 유지)
   var items=[
     {label:'0.6 mg/kg (일반)',val:(0.6*w).toFixed(0)+' mg',unit:(0.6*w/10).toFixed(1)+' mL'},
     {label:'1.0 mg/kg',       val:(1.0*w).toFixed(0)+' mg',unit:(1.0*w/10).toFixed(1)+' mL'},
@@ -5145,9 +5174,16 @@ function cRoc(){
   ];
   var el=document.getElementById('roc-bolus-grid');
   if(el) el.innerHTML='<div style="grid-column:1/-1;font-size:12px;color:var(--muted);margin-bottom:2px;">BWT <b style="font-family:var(--mono);color:var(--purple);">'+w+'kg</b> · 에스메론 10 mg/mL</div>'+mkCells(items);
-  // infusion info
-  var inf=document.getElementById('roc-inf-info');
-  if(inf) inf.innerHTML='['+w+'kg]  0.3 mg/kg/hr → '+(0.3*w).toFixed(0)+'mg = '+(0.3*w/10).toFixed(1)+'mL/hr   |   0.6 mg/kg/hr → '+(0.6*w).toFixed(0)+'mg = '+(0.6*w/10).toFixed(1)+'mL/hr';
+  // 지속주입 (v3.15 — DATA meta 기반, 하드코딩 0.3/0.6 mg/kg/hr 리터럴 제거)
+  var m=doseMeta('c-roc');
+  var dEl=document.getElementById('roc-d');
+  if(dEl && m){
+    var d=parseFloat(dEl.value)||m.default;
+    var conc=getConc('roc',m.conc,m.concUnit);              // mcg/mL (원액 10000 · 커스텀 희석 반영)
+    var rate=d*w*60/conc;                                    // mode wt_min: d×bwt×60/conc = mL/hr
+    var note=d+' mcg/kg/min · '+(d*0.06).toFixed(2)+' mg/kg/hr · BWT '+w+'kg';
+    renderBig('roc-res',rate,d,m.min,m.max,'mL / hr',note);
+  }
 }
 function cSug(){
   var w=bwt();
@@ -6796,7 +6832,7 @@ updateAll();
 var sliders=[
   ['norepi-d','norepi-sl'],['epi-d','epi-sl'],['dobu-d','dobu-sl'],
   ['dopa-d','dopa-sl'],['esmo-d','esmo-sl'],['dex-d','dex-sl'],
-  ['midaz-d','midaz-sl'],['ultiva-d','ultiva-sl'],['bec-d','bec-sl'],
+  ['midaz-d','midaz-sl'],['ultiva-d','ultiva-sl'],['bec-d','bec-sl'],['roc-d','roc-sl'],
   ['lasix-d','lasix-sl'],['prop-d','prop-sl'],['fent-d','fent-sl'],
   ['milri-d','milri-sl'],['dilti-d','dilti-sl'],['octreo-d','octreo-sl'],['hep-d','hep-sl'],['labet-d','labet-sl']
 ];
