@@ -4790,8 +4790,14 @@ function calcNaCorrection(){
     amEl.innerHTML='💧 선택 수액 1L 주입 시 예상 Na 변화: <b>'+sign+deltaPerL.toFixed(2)+' mmol/L</b> (= '+sign+deltaPerL.toFixed(2)+' mEq/L)';
   }
 
-  // 교정 속도별 주입 속도 (저Na 상승 기준)
-  // 주입속도(mL/hr) = 목표ΔNa/hr ÷ deltaPerL × 1000
+  // 교정 속도별 주입 속도
+  // 주입속도(mL/hr) = 목표ΔNa/hr ÷ (방향보정 ΔNa/L) × 1000
+  // v3.16: 방향성 + 적합성 가드. 수액이 교정 방향으로 Na를 못 움직이면(effPerL≤0) "부적합",
+  //        A-M 예측속도가 실무상한 초과면(비효율 수액) 플래그.
+  var guard=NA_SAFETY.fluidGuard;
+  var needDir = isHypo?1 : isHyper?-1 : (dir>=0?1:-1);   // +상승 / −하강
+  var effPerL = deltaPerL * needDir;                     // >0 이면 올바른 방향
+  var wrongDir = (effPerL<=0), anyImpractical=false;
   var rates=[['na-row-05',NA_SAFETY.hypo.rates[0]],['na-row-075',NA_SAFETY.hypo.rates[1]],['na-row-10',NA_SAFETY.hypo.rates[2]]];
   rates.forEach(function(r){
     var row=document.getElementById(r[0]); if(!row)return;
@@ -4800,11 +4806,15 @@ function calcNaCorrection(){
     var deltaCell=row.querySelector('.ert-delta');
     var rateCell=row.querySelector('.ert-rate');
     if(deltaCell)deltaCell.textContent=d24+' mmol/L';
-    // 주입속도: 올림 교정이면 양수 deltaPerL 필요
     var mlhr='—';
-    if(deltaPerL!==0){
-      var v=rateHr/Math.abs(deltaPerL)*1000;
-      if(isFinite(v)&&v>0) mlhr=Math.round(v)+' mL/hr';
+    if(effPerL>0){
+      var v=rateHr/effPerL*1000;
+      if(isFinite(v)&&v>0){
+        mlhr=Math.round(v)+' mL/hr';
+        if(v>guard.maxRateMlH){ mlhr='≈'+Math.round(v)+' mL/hr ⚠'; anyImpractical=true; }
+      }
+    } else {
+      mlhr='부적합';   // 수액 Na가 교정 방향과 반대 → 목표 방향 이동 불가
     }
     if(rateCell)rateCell.textContent=mlhr;
     // 24h 한계 초과 행 경고색 (고위험이면 6, 표준 8)
@@ -4814,6 +4824,18 @@ function calcNaCorrection(){
   // 안전 가드
   var safEl=document.getElementById('na-safety');
   var msgs=[];
+  // v3.16: 수액 적합성 경고 (방향 반대 / 비효율 수액) — 저·고Na 모두 적용, 최상단 노출
+  var fluidGuardMsgs=[];
+  if(isHypo||isHyper){
+    var isNS=(fluidNa===NA_SAFETY.fluidNa.ns);
+    if(wrongDir){
+      fluidGuardMsgs.push('🚫 <b>수액 부적합</b> (선택 Na '+fluidNa+' mmol/L): '+guard.wrongDir
+        +(isNS?' '+guard.nsInappropriate:''));
+    } else if(anyImpractical){
+      fluidGuardMsgs.push('⚠️ <b>비효율 수액</b> (선택 Na '+fluidNa+' mmol/L): 예측 주입속도 과대(&gt;'+guard.maxRateMlH+' mL/hr). '
+        +(isNS?guard.nsInappropriate+' ':'')+guard.amClosedSystem);
+    }
+  }
   if(isHypo){
     var planned=Math.abs(dir);
     var sv=NA_SAFETY.hypo.severe;
@@ -4843,6 +4865,7 @@ function calcNaCorrection(){
     }
     msgs.push(NA_SAFETY.hyper.note);
   }
+  msgs=fluidGuardMsgs.concat(msgs);   // v3.16: 수액 적합성 경고 최상단
   if(safEl) safEl.innerHTML=msgs.map(function(m){return '<div class="elyte-safety-line">'+m+'</div>';}).join('');
 }
 
@@ -6495,6 +6518,15 @@ var NA_SAFETY = {
           note:'원인 교정 후 자유수(D5W/half saline)로 천천히. 급성(&lt;48h) 아니면 서서히.' },
   fluidNa:{ hts3:513, ns:154, half:77, d5w:0 },
   defaultSexCoef:0.6,
+  /* v3.16: 수액 적합성 가드 — A-M 공식은 폐쇄계 가정이라 저효율 수액(수액Na≈혈청Na)에서 주입속도가 비현실적으로 발산.
+     방향 반대 수액은 목표 방향으로 Na를 못 움직임. NS는 저장성 저나트륨혈증(SIADH) 교정에 부적절(desalination). */
+  fluidGuard:{
+    maxRateMlH:500,   // A-M 예측 주입속도 실무 상한(초과 시 비효율·비현실 플래그) — 3% saline은 통과, NS는 플래그
+    wrongDir:'선택 수액의 Na가 교정 방향과 반대 — 목표 방향으로 Na를 이동시킬 수 없음.',
+    nsInappropriate:'등장성 0.9% NS는 저장성 저나트륨혈증(특히 SIADH)에서 교정에 부적절 — 소변이 NS보다 고장성이면 자유수 저류로 오히려 Na 하강(desalination). 증상성·중증은 3% 고장성 식염수 사용.',
+    amClosedSystem:'A-M 공식은 폐쇄계 가정(지속 손실·소변 배설 미반영). 저효율 수액일수록 예측 주입속도가 비현실적으로 커짐 — 실제 처방은 잦은 Na 재측정으로 적정.',
+    src:'A-M 한계: Hanna 2023(PMC10278828) · NS/SIADH desalination: PharmacyJoe·AJKD'
+  },
   src:'NEJM Evidence 2023, CJASN 2024, ECPG 2014, Brazilian J Nephrol 2024'
 };
 
