@@ -3195,7 +3195,7 @@ function toggleCustomMix(drugId, btn){
   // 재계산
   var calcMap = {
     'epi':'cEpi','dobu':'cDobu','dex':'cDex','midaz':'cMidaz',
-    'ultiva':'cUltiva','bec':'cBec','roc':'cRoc','lasix':'cLasix','prop':'cProp',
+    'ultiva':'cUltiva','bec':'cBec','roc':'cRoc','lasix':'cLasix','prop':'cProp','pento':'cPento',
     'fent':'cFent','esmo':'cEsmo',
     'milri':'cMilri','dilti':'cDilti','octreo':'cOctreo','hep':'cHep','labet':'cLabet','ins':'cIns','keppra':'cKeppra','bicarb':'cBicarb'
   };
@@ -3724,6 +3724,50 @@ var DRUGS = [
     </div>
     <div id="prop-res" class="res-big empty"><span class="res-big-num empty">체중 입력 후 계산</span></div>
     <div class="ban ban-warn"><span class="ban-icon">⚠️</span><span>장기투여(>48hr) 시 Propofol Infusion Syndrome 주의. Max 4 mg/kg/hr.</span></div>
+  `
+},
+{
+  id:'c-pento', tab:'sd',
+  mapId:'drug:pentobarbital',
+  color:'#7e22ce',
+  name:'Pentobarbital',
+  nameKr:'펜토바르비탈 · 바르비투르 혼수',
+  sub:'50mg/mL vial · 유지 0.5–5 mg/kg/hr · RSE·ICP',
+  badges:[['bd-purple','😴 Barbiturate'],['bd-gray','RSE·ICP coma']],
+  /* v3.17: 난치성 뇌전증지속상태(RSE)·난치성 두개내압 바르비투르 혼수. 로딩·유지·돌발 용량 DATA화. 근거: NCS 2012·surgicalcriticalcare 2025·medicine.com(FDA) */
+  dose:{ default:1, unit:'mg/kg/hr', min:0.5, max:5, conc:8, concUnit:'mg', mode:'wt_hr',
+         load:{ mgkg:[5,10,15], usual:10, maxRateMgMin:50, vialConc:50, breakthrough:5 } },
+  body:`
+    <div id="pento-load-grid" class="calc-grid"></div>
+    <div class="inf-divider" style="margin:10px 0 6px;font-size:12px;color:var(--muted);border-top:1px dashed var(--border);padding-top:8px;">💉 지속주입 (Maintenance Infusion)</div>
+    <div class="info-row"><span class="ic">💉 400mg/50mL</span><span class="sep">=</span><span class="ic">농도 <b>8 mg/mL</b> (희석)</span></div>
+    <div class="mix-panel">
+      <button class="mix-ftab-custom" type="button" id="mix-btn-pento" onclick="toggleCustomMix('pento',this)">커스텀</button>
+      <div class="mix-custom-wrap" id="mix-custom-pento">
+        <div class="mix-custom-row">
+          <span class="mix-custom-label">약물량</span>
+          <input class="mix-custom-inp" type="number" id="mix-drug-pento" value="400" min="0.1" step="any" inputmode="decimal" oninput="updateCustomConc('pento',cPento)">
+          <span class="mix-custom-unit">mg</span>
+          <span class="mix-custom-unit" style="padding:0 4px;color:var(--muted2);">+</span>
+          <span class="mix-custom-label">총 용량</span>
+          <input class="mix-custom-inp" type="number" id="mix-vol-pento" value="50" min="1" step="any" inputmode="decimal" oninput="updateCustomConc('pento',cPento)">
+          <span class="mix-custom-unit">mL</span>
+          <input type="hidden" id="mix-unit-pento" value="mg">
+        </div>
+        <div class="mix-custom-result" id="mix-res-pento">= 8.0 mg/mL</div>
+      </div>
+    </div>
+    <div class="slider-wrap"><input type="range" id="pento-sl" min="0.5" max="5" step="0.5" style="accent-color:#7e22ce;" oninput="syncInput('pento-sl','pento-d',cPento)"></div>
+    <div class="titration-row">
+      <button class="tit-btn" type="button" onclick="titrate('pento-d','pento-sl',-0.5,cPento)">−</button>
+      <div class="tit-val-wrap"><input type="number" id="pento-d" value="1" min="0.5" max="5" step="0.5" inputmode="decimal" oninput="syncSlider('pento-d','pento-sl');cPento()"><span class="tit-unit">mg/kg/hr</span></div>
+      <button class="tit-btn" type="button" onclick="titrate('pento-d','pento-sl',0.5,cPento)">＋</button>
+      <span class="tit-step">± 0.5</span>
+      <div class="qbtns"><button class="qbtn" type="button" onclick="setDSlider('pento-d','pento-sl',0.5,cPento)">0.5</button><button class="qbtn" type="button" onclick="setDSlider('pento-d','pento-sl',1,cPento)">1</button><button class="qbtn" type="button" onclick="setDSlider('pento-d','pento-sl',3,cPento)">3</button><button class="qbtn" type="button" onclick="setDSlider('pento-d','pento-sl',5,cPento)">5 Max</button></div>
+    </div>
+    <div id="pento-res" class="res-big empty"><span class="res-big-num empty">체중 입력 후 계산</span></div>
+    <div class="ban ban-info"><span class="ban-icon">📋</span><span><b>기본 프로토콜(RSE)</b>: 로딩 5–15 mg/kg(통상 10) ≤50 mg/min → 유지 0.5 mg/kg/hr 시작, q1h 0.5씩 증량하여 <b>burst suppression(15초당 2–3 bursts)</b> 도달(최대 5, 일부 프로토콜 4). 돌발발작 시 5 mg/kg 재볼루스. burst suppression 후 ≥48h 유지·cEEG q6h.</span></div>
+    <div class="ban ban-warn"><span class="ban-icon">⚠️</span><span>바이알 50 mg/mL — 인퓨전은 D5W/NS로 4–8 mg/mL 희석(>8 mg/mL 침전 위험). 저혈압·심억제·장마비 흔함(승압제 필요 가능). 반드시 EEG 감시 하 적정.</span></div>
   `
 },
 {
@@ -5081,6 +5125,20 @@ function cUltiva(){
   var d=parseFloat(document.getElementById('ultiva-d').value)||m.default;
   renderBig('ultiva-res',d*bwt()*60/getConc('ultiva',m.conc,m.concUnit),d,m.min,m.max,'mL / hr',d+' '+m.unit+' · BWT '+bwt()+' kg');
 }
+function cPento(){
+  var m=doseMeta('c-pento');
+  var w=bwt();
+  var L=m.load;
+  // 로딩 그리드 (바이알 vialConc mg/mL 원액 IV push ≤maxRate mg/min) — 로딩 용량은 DATA(load.mgkg)
+  var items=L.mgkg.map(function(x){
+    return {label:x+' mg/kg'+(x===L.usual?' (통상)':''), val:(x*w).toFixed(0)+' mg', unit:(x*w/L.vialConc).toFixed(1)+' mL'};
+  });
+  var g=document.getElementById('pento-load-grid');
+  if(g) g.innerHTML='<div style="grid-column:1/-1;font-size:12px;color:var(--muted);margin-bottom:2px;">로딩 [BWT <b style="font-family:var(--mono);color:#7e22ce;">'+w+'kg</b>] · '+L.vialConc+' mg/mL 원액 · ≤'+L.maxRateMgMin+' mg/min · 돌발 '+L.breakthrough+' mg/kg</div>'+mkCells(items);
+  // 유지 인퓨전 (mode wt_hr: d×bwt/conc = mL/hr)
+  var d=parseFloat(document.getElementById('pento-d').value)||m.default;
+  renderBig('pento-res',d*w/getConc('pento',m.conc,m.concUnit),d,m.min,m.max,'mL / hr',d+' '+m.unit+' · BWT '+w+' kg');
+}
 function cBec(){
   var m=doseMeta('c-bec');
   var d=parseFloat(document.getElementById('bec-d').value)||m.default;
@@ -5935,7 +5993,7 @@ function applySession(sid){
   if(s.doses){for(var k in s.doses){var el=document.getElementById(k);if(el)el.value=s.doses[k];}}
   var slPairs=[['norepi-d','norepi-sl'],['epi-d','epi-sl'],['dobu-d','dobu-sl'],['dopa-d','dopa-sl'],
     ['esmo-d','esmo-sl'],['dex-d','dex-sl'],['midaz-d','midaz-sl'],['ultiva-d','ultiva-sl'],
-    ['bec-d','bec-sl'],['lasix-d','lasix-sl'],['prop-d','prop-sl'],['fent-d','fent-sl']];
+    ['bec-d','bec-sl'],['lasix-d','lasix-sl'],['prop-d','prop-sl'],['pento-d','pento-sl'],['fent-d','fent-sl']];
   for(var i=0;i<slPairs.length;i++)syncSlider(slPairs[i][0],slPairs[i][1]);
   var allTogs=document.querySelectorAll('[id^="tog-"]');
   for(var i=0;i<allTogs.length;i++){
@@ -6831,7 +6889,7 @@ function updateAll(){
   cNorepi();cEpi();cDobu();cMilri();cDopa();cEsmo();cPhe();cDilti();
   cDex();cMidaz();cUltiva();cEtom();cHalo();cBec();cLasix();cLabet();
   cLido();cNalox();
-  cProp();cFent();cRoc();cSug();cIns();cOctreo();cHep();cKeppra();cBicarb();
+  cProp();cPento();cFent();cRoc();cSug();cIns();cOctreo();cHep();cKeppra();cBicarb();
   // 체중 의존 모듈도 갱신
   if(typeof updateFluidCalc==='function') updateFluidCalc();
   if(typeof calcNaCorrection==='function') calcNaCorrection();
@@ -6864,7 +6922,7 @@ updateAll();
 var sliders=[
   ['norepi-d','norepi-sl'],['epi-d','epi-sl'],['dobu-d','dobu-sl'],
   ['dopa-d','dopa-sl'],['esmo-d','esmo-sl'],['dex-d','dex-sl'],
-  ['midaz-d','midaz-sl'],['ultiva-d','ultiva-sl'],['bec-d','bec-sl'],['roc-d','roc-sl'],
+  ['midaz-d','midaz-sl'],['ultiva-d','ultiva-sl'],['bec-d','bec-sl'],['roc-d','roc-sl'],['pento-d','pento-sl'],
   ['lasix-d','lasix-sl'],['prop-d','prop-sl'],['fent-d','fent-sl'],
   ['milri-d','milri-sl'],['dilti-d','dilti-sl'],['octreo-d','octreo-sl'],['hep-d','hep-sl'],['labet-d','labet-sl']
 ];
