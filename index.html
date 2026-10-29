@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ICU 약물 계산기</title>
 
 <!-- ── SEO ── -->
@@ -1345,6 +1345,26 @@ textarea.fb-inp{resize:vertical;}
 .footer-app-link{display:inline-block;font-size:12px;font-weight:700;padding:8px 16px;background:var(--surface);color:var(--green);border:1px solid var(--green-bg);border-radius:10px;text-decoration:none;}
 .footer-app-link:active{background:var(--green-lt);}
 .notice-beta .nb-x{position:absolute;top:7px;right:9px;background:none;border:none;color:var(--muted);font-size:17px;cursor:pointer;line-height:1;padding:2px;}
+
+/* ===== v3.18 P1 — 터치 기기 접근성 (감사리포트 20260708 §3-2) =====
+   hover:none + pointer:coarse = 터치 기기만. 데스크톱 레이아웃 무변경. */
+@media (hover:none) and (pointer:coarse){
+  /* ① iOS 포커스 자동확대 방지 — 핀치줌 허용(viewport)과 반드시 동시 적용 */
+  input:not([type="range"]):not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
+  select, textarea{font-size:16px !important;}
+  /* 원래 16px 초과였던 입력은 기존 크기 유지 (일괄 16px로 축소 방지) */
+  /* 특이도: 위 일괄 규칙(input+:not×4)보다 높게 */
+  .tit-val-wrap input:not([type="range"]):not([type="checkbox"]):not([type="radio"]):not([type="hidden"]){font-size:20px !important;}
+  .inp-wrap input:not([type="range"]):not([type="checkbox"]):not([type="radio"]):not([type="hidden"]){font-size:19px !important;}
+  /* ② titrate ± : 시각 40px + 히트영역 44px (Apple HIG 44pt) */
+  .tit-btn{width:40px !important;height:40px !important;min-width:40px;position:relative;}
+  .tit-btn::after{content:"";position:absolute;inset:-3px;}
+  .pt-wt-step{height:40px;}  /* 폭 유지(320px 줄바꿈 방지), 높이만 확대 */
+  /* ③ 탭·포뮬러탭·빠른버튼 최소 높이 */
+  .tab{min-height:40px;}
+  .ftab{min-height:34px;}
+  .qbtn{min-height:30px;padding:4px 9px !important;}
+}
 </style>
 <!-- ===== PWA / TWA 연결 (v3.11) ===== -->
 <link rel="manifest" href="/manifest.json">
@@ -1769,7 +1789,7 @@ if('serviceWorker' in navigator){
 
   <div class="beta-banner">
     <span class="beta-tag">🫁 Beta</span>
-    <span>Vent 모듈(ABGA 연동·조정 제안)은 검증을 진행 중입니다. 제안 값은 참고용으로만 보시고, setting 변경 전 반드시 재확인해 주세요.</span>
+    <span>Vent 모듈(ABGA 연동·참고 고려사항)은 검증을 진행 중입니다. 표시 내용은 참고용이며, setting 결정은 담당 의료진의 판단으로 하십시오.</span>
   </div>
 
   <!-- ══ 결과 요약 카드 (입력 위 — 한눈에) ══ -->
@@ -1847,9 +1867,9 @@ if('serviceWorker' in navigator){
 
     <!-- ABGA → Ventilator 조정 제안 -->
     <details class="vent-acc" style="margin-bottom:12px;">
-      <summary>🫁 ABGA 기반 Ventilator 조정 제안 <span class="vent-badge-b">보조</span></summary>
+      <summary>🫁 ABGA 기반 Ventilator 참고 고려사항 <span class="vent-badge-b">참고</span></summary>
       <div class="vent-acc-body">
-        <div style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.5;">위 ABGA(pH·PaCO₂·HCO₃)와 <b>상단 🎛️ Ventilator Setting</b>을 종합해 <b>다음 조정 방향</b>을 제안합니다. setting을 바꾸면 즉시 갱신됩니다. 기계가 실시간 계산하는 항목(컴플라이언스·파형)은 다루지 않습니다.</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.5;">위 ABGA(pH·PaCO₂·HCO₃)와 <b>상단 🎛️ Ventilator Setting</b>을 종합해 <b>가이드라인상 고려사항</b>을 표시합니다. setting을 바꾸면 즉시 갱신됩니다. 기계가 실시간 계산하는 항목(컴플라이언스·파형)은 다루지 않습니다.</div>
         <div id="vs-out" style="margin-top:10px;"></div>
       </div>
     </details>
@@ -2162,7 +2182,7 @@ if('serviceWorker' in navigator){
 
   <div class="beta-banner">
     <span class="beta-tag">⚗ Beta</span>
-    <span>CRRT 모듈은 검증을 진행 중입니다. 계산·추천 값은 참고용으로만 보시고, 처방 전 반드시 재확인해 주세요.</span>
+    <span>CRRT 모듈은 검증을 진행 중입니다. 계산·표시 값은 참고용이며, 처방 결정은 담당 의료진의 판단으로 하십시오.</span>
   </div>
 
   <div style="font-size:12px;color:var(--muted);margin-bottom:14px;padding:10px 14px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);">
@@ -2493,6 +2513,7 @@ if('serviceWorker' in navigator){
       모든 계산 결과는 <b>반드시 실제 투여 전 독립적으로 재확인</b>해야 하며, 환자의 개별 임상 상태·동반질환·기관 프로토콜에 따라 달라질 수 있습니다.
       본 도구의 사용으로 발생하는 어떠한 결과에 대해서도 제작자는 법적 책임을 지지 않습니다.
       최종 의학적 결정과 그 책임은 전적으로 처방 의료진에게 있습니다.
+      <br><b>사용 목적:</b> 공개된 공식·가이드라인 수치를 의료진이 입력한 값으로 계산·표시하는 참고용 계산·참조 도구이며, 진단·치료 결정을 내리거나 이를 대체하지 않습니다.
     </div>
   </div>
 
@@ -3776,7 +3797,13 @@ var DRUGS = [
   sub:'500mg/50mL (10 mg/mL) · 1–4 mg/kg/hr 유지',
   badges:[['bd-blue','😴 GABA-A'],['bd-indigo','IBW 권장']],
   /* P0-1 A: 용량 메타 (현재값 DATA화·무회귀) */
-  dose:{ default:2, unit:'mg/kg/hr', min:1, max:4, conc:10, concUnit:'mg', mode:'wt_hr' },
+  /* v3.18 P1-c: PRIS 다단계 경고 — 근거: 제품 PI(ICU 진정 >4 mg/kg/hr 비권장), Kam & Cardone Anaesthesia 2007, Hemphill 2019 */
+  dose:{ default:2, unit:'mg/kg/hr', min:1, max:4, conc:10, concUnit:'mg', mode:'wt_hr',
+    thresholds:[
+      { at:4, level:'caution', msg:'권고 상한 도달 — >48h 지속 시 PRIS 위험. TG·CK·젖산·K·ECG(우각차단·Brugada양) 추적 확인', src:'pi,kam2007' },
+      { at:5, level:'danger',  msg:'권고 상한(4 mg/kg/hr) 초과 — PRIS 고위험 영역. 처방 재확인', src:'pi,kam2007,hemphill2019' }
+    ]
+  },
   body:`
     <div class="info-row">
       <button class="ftab active" type="button" id="prop-f-ibw" onclick="selF('prop','ibw')">IBW 기준</button>
@@ -3808,6 +3835,7 @@ var DRUGS = [
       <div class="qbtns"><button class="qbtn" type="button" onclick="setDSlider('prop-d','prop-sl',1,cProp)">1</button><button class="qbtn" type="button" onclick="setDSlider('prop-d','prop-sl',2,cProp)">2</button><button class="qbtn" type="button" onclick="setDSlider('prop-d','prop-sl',3,cProp)">3</button><button class="qbtn" type="button" onclick="setDSlider('prop-d','prop-sl',4,cProp)">4 Max</button></div>
     </div>
     <div id="prop-res" class="res-big empty"><span class="res-big-num empty">체중 입력 후 계산</span></div>
+    <div id="prop-warn"></div>
     <div class="ban ban-warn"><span class="ban-icon">⚠️</span><span>장기투여(>48hr) 시 Propofol Infusion Syndrome 주의. Max 4 mg/kg/hr.</span></div>
   `
 },
@@ -5305,6 +5333,7 @@ function cProp(){
   // rate = dose(mg/kg/hr) * weight / conc(mg/mL)
   var rate=d*w/getConc('prop',m.conc,m.concUnit);
   renderBig('prop-res',rate,d,m.min,m.max,'mL / hr',d+' '+m.unit+' · BWT '+w+' kg');
+  renderDoseWarn('prop-warn','c-prop',d);
 }
 function cFent(){
   var m=doseMeta('c-fent');
@@ -6707,7 +6736,7 @@ var VENT_SUGGEST = {
         weanFio2:0.4, weanPeep:8 },           // 이 이하면 weaning 고려 영역
   // 폐보호
   protect:{ tvPerKgMax:8, tvPerKgTarget:6, plateauMax:30, drivingMax:15, drivingMin:5 },
-  disclaimer:'한 시점의 ABGA·setting만 본 참고 제안입니다. 혈역학·진정 깊이·목표 pH·추세를 함께 보고, 기계가 실시간으로 보여주는 컴플라이언스·파형을 우선으로 판단합니다.',
+  disclaimer:'한 시점의 ABGA·setting만 본 참고 고려사항입니다. 혈역학·진정 깊이·목표 pH·추세를 함께 보고, 기계가 실시간으로 보여주는 컴플라이언스·파형을 우선으로 판단합니다.',
   src:'ARDSnet, permissive hypercapnia(pH≥7.20), Amato 2015(ΔP), Surviving Sepsis/KSCCM 일반 원칙'
 };
 
@@ -7562,7 +7591,7 @@ function calcVentSuggest(){
   }
 
   // 렌더
-  if(sug.length===0){ out.innerHTML='<div style="font-size:12px;color:var(--muted);">ABGA·setting 입력 시 제안 표시</div>'; return; }
+  if(sug.length===0){ out.innerHTML='<div style="font-size:12px;color:var(--muted);">ABGA·setting 입력 시 고려사항 표시</div>'; return; }
   // 심각도 정렬: high → mid → ok
   var order={high:0,mid:1,ok:2};
   sug.sort(function(a,b){ return order[a.sev]-order[b.sev]; });
@@ -8049,7 +8078,7 @@ function renderCRRTSummary(){
        +'<div style="font-size:9px;color:var(--muted);">목표&lt;25%</div></div>';
   if(bag){
     cards+='<div style="flex:1.4;min-width:120px;background:var(--teal-lt,#ccfbf1);border:1px solid var(--teal);border-radius:9px;padding:9px 10px;">'
-         +'<div style="font-size:9.5px;color:var(--teal);font-weight:700;text-transform:uppercase;">추천 용액</div>'
+         +'<div style="font-size:9.5px;color:var(--teal);font-weight:700;text-transform:uppercase;">조성 일치 용액 (참고)</div>'
          +'<div style="font-size:15px;font-weight:800;color:var(--teal);line-height:1.15;">'+(bag.label||bag.name)+'</div>'
          +'<div style="font-size:9.5px;color:var(--muted);">'+(bag.brands||'')+'</div></div>';
   }
