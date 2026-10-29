@@ -1,6 +1,5 @@
 {
   "name": "ICU 약물 계산기",
-  "id": "/",
   "short_name": "ICU계산기",
   "description": "중환자실 약물 용량·농도·전해질·영양 계산기. 승압제·진정제·항부정맥제 mL/hr 자동 계산, 커스텀 약물, 즐겨찾기. 의료전문가용.",
   "lang": "ko",
@@ -35,5 +34,13 @@
       "type": "image/png",
       "purpose": "maskable"
     }
-  ]
+  ],
+  "related_applications": [
+    {
+      "platform": "play",
+      "url": "https://play.google.com/store/apps/details?id=kr.icucalc.twa",
+      "id": "kr.icucalc.twa"
+    }
+  ],
+  "prefer_related_applications": false
 }
